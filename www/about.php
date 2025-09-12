@@ -1,6 +1,4 @@
 <?php
-
-// Démarrer la session
 session_start();
 
 require("gestion_bdd.php");
@@ -176,7 +174,7 @@ $gestionnaireTimeline = BDD::recupTimelinesDansBdd();
     <div class="dpad">
       <a href="index.html" class="btn up">home</a>
       <a href="about.php" class="btn down">about</a>
-      <a href="#" class="btn left"></a>
+      <a href="hobbies.php" class="btn left"></a>
       <a href="#" class="btn right"></a>
       <a href="#" class="btn center"></a>
     </div>

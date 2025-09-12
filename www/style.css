@@ -57,6 +57,27 @@ body {
   right: 0;
 }
 
+.affichage_hobbies {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr); /* 3 colonnes égales */
+  gap: 40px;
+  justify-content: center; /* Centre les colonnes si la grille est plus petite que le conteneur */
+}
+
+.affichage_hobbies > div {
+  background-color: #eaeaea;
+  padding: 40px;
+  text-align: center;
+  min-width: 0; /* Évite les débordements si le contenu est trop grand */
+}
+
+.affichage_hobbies > div > img {
+  width: 100%;
+  height: auto;
+  max-height: 75%;
+}
+
+
 /* Contenu principal */
 .content {
   flex-grow: 1;

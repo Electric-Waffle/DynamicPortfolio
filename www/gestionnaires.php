@@ -114,6 +114,11 @@ class GestionnaireHobbies
         }
     }
 
+    public function recupererHobbies()
+    {
+        return $this->hobbies;
+    }
+
 }
 
 // Classe Timeline

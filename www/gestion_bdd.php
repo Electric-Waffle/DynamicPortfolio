@@ -2,6 +2,7 @@
 
 namespace Model;
 require "gestionnaires.php";
+require "../model/InteractionFichier.php";
 use SQLite3;
 
 class BDD {
