@@ -556,6 +556,75 @@ class BDD {
         return $gestionnaire;
     }
 
+    static public function ajoutProjectDansBdd($chemin_image_temp, $nom_image_temp, $titre, $description, $lien, $tableau_id_tag_du_projet){
+        // chemin d'image obtenu en général avec $_FILES['image']['tmp_name'] et ca $_FILES['image']['name']
+        // Ajout d'un projet dans la base de donnée
+            
+        $message_erreur = "";
+
+        // transformation du chemin temporaire du logo en chemin final
+        $tableauResultatAjoutImage = InteractionFichier::transformationImageTempEnFinal($chemin_image_temp, $nom_image_temp);
+        $cheminFinalNouvelleImage = $tableauResultatAjoutImage["nouveauChemin"];
+        $message_erreur .= $tableauResultatAjoutImage["messageErreur"];
+
+        if ($message_erreur != "") {
+            return $message_erreur;
+        }
+
+        // Connexion a la db
+        $connexionBaseDeDonnee = new SQLite3(BDD::$cheminDeLaBDD);
+
+        // ETAPE 1 : AJOUT DU PROJET A LA TABLE PROJET
+        // Préparation du requetage pour la table projet
+        $requetage = $connexionBaseDeDonnee->prepare("insert into project (titre, description, chemin_image, lien) values (?, ?, ?, ?)");
+            
+        // Liage des variables a la requete
+        $requetage->bindValue(1, $titre, SQLITE3_TEXT);
+        $requetage->bindValue(2, $description, SQLITE3_TEXT);
+        $requetage->bindValue(3, $cheminFinalNouvelleImage, SQLITE3_TEXT);
+        $requetage->bindValue(4, $lien, SQLITE3_TEXT);
+            
+        // Execution de la requete
+        if ($requetage->execute() == false) {
+                
+            // Message en cas d'échec de l'édition
+            $message_erreur .= "<h1>Erreur lors de l'Ajout du Projet</h1>";
+                
+        }
+
+        if ($message_erreur != "") {
+            $connexionBaseDeDonnee->close();
+            return $message_erreur;
+        }
+
+        // ETAPE 2 : RECUPERATION DE L'ID DU PROJET RAJOUTE
+        $id_du_projet = $connexionBaseDeDonnee->lastInsertRowID();
+
+        // ETAPE 3 : AJOUT DANS LA TABLE POSSEDE DES ID DE TAG AINSI QUE LEUR RELATION A L'ID DU PROJET
+        foreach ($tableau_id_tag_du_projet as $id_tag_associe_au_projet) {
+            // Préparation du requetage pour la table projet
+            $requetage = $connexionBaseDeDonnee->prepare("insert into possede (id_project, id_tag) values (?, ?)");
+                
+            // Liage des variables a la requete
+            $requetage->bindValue(1, $id_du_projet, SQLITE3_INTEGER);
+            $requetage->bindValue(2, $id_tag_associe_au_projet, SQLITE3_INTEGER);
+                
+            // Execution de la requete
+            if ($requetage->execute() == false) {
+                    
+                // Message en cas d'échec de l'édition
+                $message_erreur .= "<h1>Erreur lors de l'Ajout du tag d'id " . $id_tag_associe_au_projet . " au projet</h1>";
+                    
+            }
+        }
+        
+            
+        // Fermeture de la base de donnée
+        $connexionBaseDeDonnee->close();
+
+        return $message_erreur;
+    }
+
     
 }
 ?>
