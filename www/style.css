@@ -59,7 +59,7 @@ body {
 
 .affichage_hobbies {
   display: grid;
-  grid-template-columns: repeat(4, 1fr); /* 3 colonnes égales */
+  grid-template-columns: repeat(4, 1fr); /* 4 colonnes égales */
   gap: 40px;
   justify-content: center; /* Centre les colonnes si la grille est plus petite que le conteneur */
 }
