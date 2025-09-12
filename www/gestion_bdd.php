@@ -36,7 +36,7 @@ class BDD {
         if ($cheminImageASupprimer !== "") {
             $messageErreur .= InteractionFichier::supprimeImageDansFichier($cheminImageASupprimer);
         }
-        
+
         $bdd->close();
 
         return $messageErreur;
@@ -318,7 +318,7 @@ class BDD {
         } else {
                 
             // Message en cas d'échec de l'édition
-            $message_erreur .= "<h1>Hobby lors de l'Ajout du Skill</h1>";
+            $message_erreur .= "<h1>Erreur lors de l'Ajout du Hobby</h1>";
                 
         }
             
@@ -440,12 +440,12 @@ class BDD {
         if ($requetage->execute()) {
                 
             // Message en cas de succès de l'édition
-            $message_erreur .= "<h1>Hobby Supprimé Avec Succès</h1>";
+            $message_erreur .= "<h1>Timeline Supprimée Avec Succès</h1>";
                 
         } else {
                 
             // Message en cas d'échec de l'édition
-            $message_erreur .= "<h1>Erreur lors de la Suppression du Hobby</h1>";
+            $message_erreur .= "<h1>Erreur lors de la Suppression de la Timeline</h1>";
                 
         }
             
@@ -455,8 +455,7 @@ class BDD {
         return $message_erreur;
     }
 
-
-    // Récup . Ajout . Suppression dans la table [project/tags/pSossede] de la bdd /data/database.db
+    // Récup . Ajout . Suppression dans la table [tag] de la bdd /data/database.db
     static public function recupTagsDisponiblesDansBdd(){
         // Récupération des tags disponibles dans la base de donnée
 
@@ -467,21 +466,89 @@ class BDD {
 
         $resultat = $connexionBaseDeDonnee->query($requete);
 
-        $tableau_de_tags_disponibles = [];
+        $gestionnaire = new GestionnaireTags();
 
         while ($row = $resultat->fetchArray(SQLITE3_ASSOC)) {
 
             $unTagDisponible = new Tag($row['id_tag'], $row['titre'], $row['description']);
 
-            $tableau_de_tags_disponibles[] = $unTagDisponible;
+            $gestionnaire->ajouterTag($unTagDisponible);
 
         }
 
         // Fermeture de la base de donnée
         $connexionBaseDeDonnee->close();
 
-        return $tableau_de_tags_disponibles;
+        return $gestionnaire;
     }
+
+    static public function ajoutTagDansBdd($titre, $description){
+        // Ajout d'un tag dans la base de donnée
+            
+        $message_erreur = "";
+
+        // Connexion a la db
+        $connexionBaseDeDonnee = new SQLite3(BDD::$cheminDeLaBDD);
+
+        // Préparation du requetage
+        $requetage = $connexionBaseDeDonnee->prepare("insert into tag (titre, description) values (?, ?)");
+            
+        // Liage des variables a la requete
+        $requetage->bindValue(1, $titre, SQLITE3_TEXT);
+        $requetage->bindValue(2, $description, SQLITE3_TEXT);
+            
+        // Execution de la requete
+        if ($requetage->execute()) {
+                
+            // Message en cas de succès de l'édition
+            $message_erreur .= "<h1>Tag Ajouté Avec Succès</h1>";
+                
+        } else {
+                
+            // Message en cas d'échec de l'édition
+            $message_erreur .= "<h1>Erreur lors de l'Ajout du Tag</h1>";
+                
+        }
+            
+        // Fermeture de la base de donnée
+        $connexionBaseDeDonnee->close();
+
+        return $message_erreur;
+    }
+
+    static public function suppressionTagDansBdd($unId){
+        // Suppression d'un tag dans la base de donnée
+        $message_erreur = "";
+
+        // Connexion a la db
+        $connexionBaseDeDonnee = new SQLite3(BDD::$cheminDeLaBDD);
+
+        // Préparation du requetage
+        $requetage = $connexionBaseDeDonnee->prepare("delete from tag where id_tag = ?");
+            
+        // Liage des variables a la requete
+        $requetage->bindValue(1, $unId, SQLITE3_INTEGER);
+            
+        // Execution de la requete
+        if ($requetage->execute()) {
+                
+            // Message en cas de succès de l'édition
+            $message_erreur .= "<h1>Tag Supprimé Avec Succès</h1>";
+                
+        } else {
+                
+            // Message en cas d'échec de l'édition
+            $message_erreur .= "<h1>Erreur lors de la Suppression du Tag</h1>";
+                
+        }
+            
+        // Fermeture de la base de donnée
+        $connexionBaseDeDonnee->close();
+
+        return $message_erreur;
+    }
+
+    // Récup . Ajout . Suppression dans la table [project/tags/pSossede] de la bdd /data/database.db
     static public function recupRelationsTagsProjectsDansBdd(){
         // création d'un tableau id_project => [id_tags, id_tags, id_tags, ...] a partir de la table possede de la bdd
 
@@ -522,8 +589,8 @@ class BDD {
         $tableau_relation_projet_tag = BDD::recupRelationsTagsProjectsDansBdd();
 
         // Récupération de tout les tags crées pour association future
-        $tableau_de_tags_disponibles = BDD::recupTagsDisponiblesDansBdd();
-        foreach ($tableau_de_tags_disponibles as $tag_disponible) {
+        $gestionnaire_tags_disponibles = BDD::recupTagsDisponiblesDansBdd();
+        foreach ($gestionnaire_tags_disponibles->donnerTags() as $tag_disponible) {
             $gestionnaire->ajouterTagsDisponibles($tag_disponible);
         }
 

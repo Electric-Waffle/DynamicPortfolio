@@ -165,6 +165,31 @@ class Tag
     }
 }
 
+// Classe GestionnaireTags
+class GestionnaireTags
+{
+    private $tags = [];
+
+    public function ajouterTag($tag) {
+        $this->tags[] = $tag;
+    }
+
+    public function donnerTags() {
+        return $this->tags;
+    }
+
+    public function afficherTags()
+    {
+        foreach ($this->tags as $tag) {
+            echo "Id : " . $tag->id . "<br>";
+            echo "Titre : " . $tag->titre . "<br>";
+            echo "Description : " . $tag->description . "<br>";
+            echo "<hr>";
+        }
+    }
+
+}
+
 // Classe Project
 class Project
 {
