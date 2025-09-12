@@ -454,6 +454,108 @@ class BDD {
     }
 
 
-    // Récup . Ajout . Suppression dans la table [Project/Tags/Possede] de la bdd /data/database.db
+    // Récup . Ajout . Suppression dans la table [project/tags/pSossede] de la bdd /data/database.db
+    static public function recupTagsDisponiblesDansBdd(){
+        // Récupération des tags disponibles dans la base de donnée
+
+        // Connexion a la db
+        $connexionBaseDeDonnee = new SQLite3(BDD::$cheminDeLaBDD);
+            
+        $requete = "select * from tag";
+
+        $resultat = $connexionBaseDeDonnee->query($requete);
+
+        $tableau_de_tags_disponibles = [];
+
+        while ($row = $resultat->fetchArray(SQLITE3_ASSOC)) {
+
+            $unTagDisponible = new Tag($row['id_tag'], $row['titre'], $row['description']);
+
+            $tableau_de_tags_disponibles[] = $unTagDisponible;
+
+        }
+
+        // Fermeture de la base de donnée
+        $connexionBaseDeDonnee->close();
+
+        return $tableau_de_tags_disponibles;
+    }
+    static public function recupRelationsTagsProjectsDansBdd(){
+        // création d'un tableau id_project => [id_tags, id_tags, id_tags, ...] a partir de la table possede de la bdd
+
+        // Connexion a la db
+        $connexionBaseDeDonnee = new SQLite3(BDD::$cheminDeLaBDD);
+            
+        $requete = "select * from possede";
+
+        $resultat = $connexionBaseDeDonnee->query($requete);
+
+        $tableau = [];
+
+        while ($row = $resultat->fetchArray(SQLITE3_ASSOC)) {
+
+            $id_projet = $row["id_project"];
+            $id_tag = $row["id_tag"];
+
+            if (!isset($tableau[$id_projet])) {
+                // le tableau de tags pour id_projet n'existe pas, on le crée
+                $tableau[$id_projet] = [];
+            }
+
+            // on rajoute le tag au tableau de tag pour id_projet
+            $tableau[$id_projet][] = $id_tag;
+
+        }
+
+        // Fermeture de la base de donnée
+        $connexionBaseDeDonnee->close();
+
+        return $tableau;
+    }
+    static public function recupProjectsDansBdd(){
+        // Récupération des projets dans la base de donnée
+        $gestionnaire = new GestionnaireProjects();
+
+        // Récupération des relations projet/tag dans un tableau
+        $tableau_relation_projet_tag = BDD::recupRelationsTagsProjectsDansBdd();
+
+        // Récupération de tout les tags crées pour association future
+        $tableau_de_tags_disponibles = BDD::recupTagsDisponiblesDansBdd();
+        foreach ($tableau_de_tags_disponibles as $tag_disponible) {
+            $gestionnaire->ajouterTagsDisponibles($tag_disponible);
+        }
+
+        // Connexion a la db
+        $connexionBaseDeDonnee = new SQLite3(BDD::$cheminDeLaBDD);
+            
+        $requete = "select * from project";
+
+        $resultat = $connexionBaseDeDonnee->query($requete);
+
+
+        while ($row = $resultat->fetchArray(SQLITE3_ASSOC)) {
+
+            $unProject = new Project($row['id_project'], $row['titre'], $row['description'], $row["lien"], $row["chemin_image"]);
+
+            if (isset($tableau_relation_projet_tag[$unProject->id])) {
+
+                // On a une relation entre le projet et une liste d'id de tag que le projet possede, alors on rajoute
+                foreach ($tableau_relation_projet_tag[$unProject->id] as $id_tag_du_projet) {
+                    $unProject->ajouterTags($id_tag_du_projet);
+                }
+
+            }
+
+            $gestionnaire->ajouterProjects($unProject);
+
+        }
+
+        // Fermeture de la base de donnée
+        $connexionBaseDeDonnee->close();
+
+        return $gestionnaire;
+    }
+
+    
 }
 ?>

@@ -151,4 +151,76 @@ class GestionnaireTimelines
 
 }
 
+// Classe Tag
+class Tag
+{
+    public $id;
+    public $titre;
+    public $description;
+    public function __construct($id, $titre, $description,)
+    {
+        $this->id = $id;
+        $this->titre = $titre;
+        $this->description = $description;
+    }
+}
+
+// Classe Project
+class Project
+{
+    public $id;
+    public $titre;
+    public $description;
+    public $lien;
+    public $chemin_image;
+
+    // Liste de tout les id des tags possédés par le project
+    public $tags;
+
+    public function __construct($id, $titre, $description, $lien, $chemin_image)
+    {
+        $this->id = $id;
+        $this->titre = $titre;
+        $this->description = $description;
+        $this->lien = $lien;
+        $this->chemin_image = $chemin_image;
+        $this->tags = [];
+    }
+
+    public function ajouterTags($tag) {
+        $this->tags[] = $tag;
+    }
+}
+
+// Classe GestionnaireProjects
+class GestionnaireProjects
+{
+    // Liste de tout les projets
+    private $projects = [];
+
+    // Liste de tout les tags qui existent, avec leurs informations
+    private $tags_disponibles = [];
+
+    public function ajouterProjects($project) {
+        $this->projects[] = $project;
+    }
+
+    public function ajouterTagsDisponibles($tag_disponible) {
+        $this->tags_disponibles[] = $tag_disponible;
+    }
+
+    public function afficherProjects()
+    {
+        foreach ($this->projects as $project) {
+            echo "Id : " . $project->id . "<br>";
+            echo "Titre : " . $project->titre . "<br>";
+            echo "Description : " . $project->description . "<br>";
+            echo "Lien : " . $project->lien . "<br>";
+            echo "Chemin Image : " . $project->chemin_image . "<br>";
+            echo "<hr>";
+        }
+    }
+
+}
+
 ?>
