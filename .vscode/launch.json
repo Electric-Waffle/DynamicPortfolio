@@ -13,9 +13,11 @@
             "port": 9003,
             "runtimeArgs": [
                 "-c",
-                "${workspaceFolder}/php.ini",
+                "${workspaceFolder}/config/php.ini",
                 "-S",
-                "localhost:8080"
+                "localhost:8080",
+                "-t",
+                "${workspaceFolder}/www"
             ]
         },
         

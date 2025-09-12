@@ -1,6 +1,7 @@
 <?php
 
 namespace Model;
+require "gestionnaires.php";
 use SQLite3;
 
 class BDD {
@@ -377,7 +378,7 @@ class BDD {
 
         while ($row = $resultat->fetchArray(SQLITE3_ASSOC)) {
 
-            $uneTimeline = new Timeline($row['id_timeline'], $row['description'], $row['date']);
+            $uneTimeline = new Timeline($row['id_timeline'], $row['date'], $row['description']);
 
             $gestionnaire->ajouterTimeline($uneTimeline);
 

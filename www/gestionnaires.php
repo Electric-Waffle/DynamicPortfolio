@@ -142,11 +142,14 @@ class GestionnaireTimelines
     public function afficherTimelines()
     {
         foreach ($this->timelines as $timeline) {
-            echo "Id : " . $timeline->id . "<br>";
-            echo "Date : " . $timeline->date . "<br>";
-            echo "Description : " . $timeline->description . "<br>";
+            echo $timeline->date . " - " . $timeline->description ;
             echo "<hr>";
         }
+    }
+
+    public function recupererTimelines()
+    {
+        return $this->timelines;
     }
 
 }
