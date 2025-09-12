@@ -1,0 +1,108 @@
+/* Reset de base */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+/* Corps de la page */
+body {
+  font-family: Arial, sans-serif;
+  background-color: #eaeaea;
+}
+
+/* Barres grises */
+.bar {
+  background-color: #ccc;
+  z-index: 100;
+}
+
+/* Barre du haut */
+.top-bar {
+  position: sticky;
+  top: 0;
+  height: 40px;
+  width: 100%;
+}
+
+/* Barre du bas */
+.bottom-bar {
+  position: sticky;
+  bottom: 0;
+  height: 13vw;
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 20px;
+}
+
+/* Barres latérales */
+.layout {
+  display: flex;
+}
+
+.side-bar {
+  position: sticky;
+  top: 40px;
+  bottom: 100px;
+  width: 40px;
+}
+
+.left-bar {
+  left: 0;
+}
+
+.right-bar {
+  right: 0;
+}
+
+/* Contenu principal */
+.content {
+  flex-grow: 1;
+  padding: 20px;
+  background-color: white;
+  min-height: 100vh;
+}
+
+/* Croix directionnelle */
+.dpad {
+  position: relative;
+  width: 60px;
+  height: 60px;
+}
+
+.dpad .btn {
+  position: absolute;
+  background-color: #666;
+  border: 2px solid #444;
+  border-radius: 4px;
+  width: 20px;
+  height: 20px;
+  display: block;
+}
+
+.dpad .up    { top: 0; left: 20px; }
+.dpad .down  { bottom: 0; left: 20px; }
+.dpad .left  { top: 20px; left: 0; }
+.dpad .right { top: 20px; right: 0; }
+.dpad .center { top: 20px; left: 20px; background-color: #333; }
+
+/* Boutons A et B */
+.buttons {
+  display: flex;
+  gap: 20px;
+}
+
+.button-a, .button-b {
+  background-color: #900;
+  color: white;
+  font-weight: bold;
+  width: 40px;
+  height: 40px;
+  text-align: center;
+  line-height: 40px;
+  border-radius: 50%;
+  text-decoration: none;
+  border: 2px solid #600;
+}
