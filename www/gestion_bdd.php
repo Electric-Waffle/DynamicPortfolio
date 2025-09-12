@@ -36,6 +36,8 @@ class BDD {
         if ($cheminImageASupprimer !== "") {
             $messageErreur .= InteractionFichier::supprimeImageDansFichier($cheminImageASupprimer);
         }
+        
+        $bdd->close();
 
         return $messageErreur;
 
@@ -123,7 +125,7 @@ class BDD {
         $message_erreur = BDD::deleteImageFromImageId($unId, "id_contact", "chemin_logo", "contact_link");
             
         // Préparation du requetage
-        $requetage = $connexionBaseDeDonnee->prepare("delete from contact_link where id_contact == ?");
+        $requetage = $connexionBaseDeDonnee->prepare("delete from contact_link where id_contact = ?");
             
         // Liage des variables a la requete
         $requetage->bindValue(1, $unId, SQLITE3_INTEGER);
@@ -230,7 +232,7 @@ class BDD {
         $message_erreur = BDD::deleteImageFromImageId($unId, "id_skill", "chemin_logo", "skill");
             
         // Préparation du requetage
-        $requetage = $connexionBaseDeDonnee->prepare("delete from skill where id_skill == ?");
+        $requetage = $connexionBaseDeDonnee->prepare("delete from skill where id_skill = ?");
             
         // Liage des variables a la requete
         $requetage->bindValue(1, $unId, SQLITE3_INTEGER);
@@ -336,7 +338,7 @@ class BDD {
         $message_erreur = BDD::deleteImageFromImageId($unId, "id_hobby", "chemin_image", "hobby");
             
         // Préparation du requetage
-        $requetage = $connexionBaseDeDonnee->prepare("delete from hobby where id_hobby == ?");
+        $requetage = $connexionBaseDeDonnee->prepare("delete from hobby where id_hobby = ?");
             
         // Liage des variables a la requete
         $requetage->bindValue(1, $unId, SQLITE3_INTEGER);
@@ -429,7 +431,7 @@ class BDD {
         $connexionBaseDeDonnee = new SQLite3(BDD::$cheminDeLaBDD);
 
         // Préparation du requetage
-        $requetage = $connexionBaseDeDonnee->prepare("delete from timeline where id_timeline == ?");
+        $requetage = $connexionBaseDeDonnee->prepare("delete from timeline where id_timeline = ?");
             
         // Liage des variables a la requete
         $requetage->bindValue(1, $unId, SQLITE3_INTEGER);
@@ -625,6 +627,55 @@ class BDD {
         return $message_erreur;
     }
 
+    static public function suppressionProjectDansBdd($unId){
+        // Suppression d'un projet dans la base de donnée
+            
+        // Connexion a la db
+        $connexionBaseDeDonnee = new SQLite3(BDD::$cheminDeLaBDD);
+
+        // Suppression de l'image 
+        $message_erreur = BDD::deleteImageFromImageId($unId, "id_project", "chemin_image", "project");
+        
+        // ETAPE 1 : SUPRESSION DES RELATION PROJET/TAGS DANS LA TABLE POSSEDE
+        // Préparation du requetage
+        $requetage = $connexionBaseDeDonnee->prepare("delete from possede where id_project = ?");
+            
+        // Liage des variables a la requete
+        $requetage->bindValue(1, $unId, SQLITE3_INTEGER);
+            
+        // Execution de la requete
+        if ($requetage->execute() == false) {
+                
+            // Message en cas d'échec de l'édition
+            $message_erreur .= "<h1>Erreur lors de la supression des relations Tag/Projet</h1>";
+                
+        }
+
+        if ($message_erreur != "") {
+            $connexionBaseDeDonnee->close();
+            return $message_erreur;
+        }
+
+        // ETAPE 2 : SUPRESSION DU PROJET DANS LA TABLE PROJET
+        // Préparation du requetage
+        $requetage = $connexionBaseDeDonnee->prepare("delete from project where id_project = ?");
+            
+        // Liage des variables a la requete
+        $requetage->bindValue(1, $unId, SQLITE3_INTEGER);
+            
+        // Execution de la requete
+        if ($requetage->execute() == false) {
+                
+            // Message en cas d'échec de l'édition
+            $message_erreur .= "<h1>Erreur lors de la supression du Projet</h1>";
+                
+        }
+
+        // Fermeture de la base de donnée
+        $connexionBaseDeDonnee->close();
+
+        return $message_erreur;
+    }
     
 }
 ?>
