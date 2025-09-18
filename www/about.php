@@ -2,7 +2,14 @@
 session_start();
 
 require("gestion_bdd.php");
+require("../core/View.php");
+
 use Model\BDD;
+use Core\View;
+
+
+// Controlleur
+
 
 $mode = "User";
 $message_erreur = "";
@@ -33,105 +40,46 @@ if (isset($_SESSION['nom']) && $_SESSION['nom'] == "Sylvain") {
 // récupération des données de timeline dans la bdd
 $gestionnaireTimeline = BDD::recupTimelinesDansBdd();
 
+// récupération des différents "bouts de page"
+$barre_navigation = View::render("barre_bouton.php", ["mode" => $mode, "message_erreur" => $message_erreur]);
+$barre_droite = View::render("barre_droite.php");
+$barre_gauche = View::render("barre_gauche.php");
+$barre_haut = View::render("barre_haut.php", ["mode" => $mode, "type" => "with_button"]);
+$formulaire_ajout = View::render("form_ajout_about.php", ["mode" => $mode]);
+
+// Vue
+
 ?>
 
 
 <!DOCTYPE html>
 <html lang="fr">
+
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>About</title>
-  <style>
-    .active {
-      display:contents;
-    }
-    .inactive {
-      display: none;
-    }
-  </style>
   <link rel="stylesheet" href="style.css" />
 </head>
+
 <body>
 
   <!-- Barre supérieure -->
-  <?php
-  if ($mode == "Backoffice") {
-  ?>
-  <?php
-  }
-  ?>
-  <header class="bar top-bar">
-  
-  <!-- Joli bouton css-->
-  <?php
-  if ($mode == "Backoffice") {
-  ?>
-  <div class="switch-container">
-    <input class="switch-input" type="checkbox">
-    <div class="switch-button">
-      <div class="switch-button-inside">
-        <svg class="switch-icon off" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
-          <path fill-rule="evenodd" clip-rule="evenodd" d="M8 12C10.2091 12 12 10.2091 12 8C12 5.79086 10.2091 4 8 4C5.79086 4 4 5.79086 4 8C4 10.2091 5.79086 12 8 12ZM8 14C11.3137 14 14 11.3137 14 8C14 4.68629 11.3137 2 8 2C4.68629 2 2 4.68629 2 8C2 11.3137 4.68629 14 8 14Z"/>
-        </svg>
-        <svg class="switch-icon on" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
-          <rect x="2" y="7" width="12" height="2" rx="1"/>
-        </svg>
-      </div>
-    </div>
-  </div>
-  <?php
-  }
-  ?>
-
-  </header>
+  <?php echo $barre_haut; ?>
 
   <!-- Conteneur principal -->
   <div class="layout">
     <!-- Barre gauche -->
-    <aside class="bar side-bar left-bar"></aside>
+    <?php echo $barre_gauche; ?>
 
     <!-- Contenu principal scrollable -->
     <main class="content">
 
       <!-- formulaire d'ajout -->
-        <?php
-        if ($mode == "Backoffice") {
-        ?>
-        <div id="formulaire_ajout_timeline" class="inactive">
+      <?php echo $formulaire_ajout; ?>
+      
 
-          <div>
-            <h3>Ajouter une Timeline</h3>
-          </div>
-
-          <form action="" method="post">
-            <div>
-            <label for="date" style="margin-right: 10px;">Date :</label>
-            <input type="text" id="date" name="date">
-            <label for="description" style="margin-left: 10px; margin-right: 10px;">Evenement :</label>
-            <input type="text" id="description" name="description" style="margin-right: 10px;">
-            <input type="submit" value="Valider">
-            </div>
-          </form>
-
-        </div>
-        
-        
-        <?php
-        }
-        ?>
-        
       <div style="height: auto; background: #f9f9f9;">
-
-        
-
-        <br>
-
-        <?php
-        if ($message_erreur != "") {
-          echo "<h3>" . $message_erreur . "</h3>";
-        }
-        ?>
 
         <br>
 
@@ -144,88 +92,68 @@ $gestionnaireTimeline = BDD::recupTimelinesDansBdd();
 
         <h1>Timeline</h1>
         <div class="boite_about_intro">
-          <?php
+            <?php foreach ($gestionnaireTimeline->recupererTimelines() as $timeline): ?>
+                <div class="timeline-item">
+                    <?= htmlspecialchars($timeline->date) ?> - <?= htmlspecialchars($timeline->description) ?>
 
-          foreach ($gestionnaireTimeline->recupererTimelines() as $timeline) {
-            $affichage_timeline = $timeline->date . " - " . $timeline->description . " |  ";
-            if ($mode == "Backoffice") {
-              $affichage_timeline .= "<form action=\"\" method=\"post\" class=\"inactive bouton_suppression_timeline\"><input type=\"hidden\" name=\"id_pour_suppression\" value=\"" . $timeline->id . "\"><input type=\"submit\" value=\"supprimer\"></form>";
-            }
-            $affichage_timeline .= "<hr>";
-            echo $affichage_timeline;
-          }
+                    <?php if ($mode === "Backoffice"): ?>
+                        <form action="" method="post" class="bouton_suppression_timeline inactive">
+                            <input type="hidden" name="id_pour_suppression" value="<?= $timeline->id ?>">
+                            <input type="submit" value="Supprimer" class="delete-button">
+                        </form>
+                    <?php endif; ?>
 
-          ?>
+                    <hr>
+                </div>
+            <?php endforeach; ?>
         </div>
+
 
       </div>
 
-      
+
 
     </main>
 
     <!-- Barre droite -->
-    <aside class="bar side-bar right-bar"></aside>
+    <?php echo $barre_droite; ?>
+
   </div>
 
-  <!-- Barre inférieure avec les contrôles -->
-  <footer class="bar bottom-bar">
-    <!-- Croix directionnelle -->
-    <div class="dpad">
-      <a href="index.html" class="btn up">home</a>
-      <a href="about.php" class="btn down">about</a>
-      <a href="hobbies.php" class="btn left"></a>
-      <a href="#" class="btn right"></a>
-      <a href="#" class="btn center"></a>
-    </div>
-
-    <!-- Boutons A & B -->
-    <div class="buttons">
-      <?php
-      if ($mode == "Backoffice") {
-        echo "<form method=\"post\" action=\"\">";
-        echo "<input class=\"btn button-b\" type=\"submit\" name=\"deconnexion\" value=\"B\">";
-        echo "</form>";
-      }
-      else {
-        echo "<form method=\"post\" action=\"\">";
-        echo "<input class=\"btn button-a\" type=\"submit\" name=\"connexion\" value=\"A\">";
-        echo "</form>";
-      }
-      ?>
-    </div>
-  </footer>
+  <?php echo $barre_navigation; ?>
 
 </body>
 
 <script>
-// On récupère la valeur PHP dans une variable JS
-let mode = <?= json_encode($mode) ?>;
+  // On récupère la valeur PHP dans une variable JS
+  let mode = <?= json_encode($mode) ?>;
 
-if (mode === "Backoffice") {
-  zone_formulaire_ajout_timeline = document.getElementById("formulaire_ajout_timeline");
-  zones_boutons_supprimant_timeline = document.querySelectorAll(".bouton_suppression_timeline");
-  zone_bouton_montrant_mode_backoffice = document.getElementById("bouton_montrant_mode_backoffice");
+  if (mode === "Backoffice") {
+    zone_formulaire_ajout_timeline = document.getElementById("formulaire_ajout_timeline");
+    zones_boutons_supprimant_timeline = document.querySelectorAll(".bouton_suppression_timeline");
+    zone_bouton_montrant_mode_backoffice = document.getElementById("bouton_montrant_mode_backoffice");
 
-  document.querySelector('.switch-input').onclick = () => {
+    document.querySelector('.switch-input').onclick = () => {
 
-    if (zone_formulaire_ajout_timeline.className == "active") {
-      zone_formulaire_ajout_timeline.className = "inactive";
-      zones_boutons_supprimant_timeline.forEach(bouton => {
-        bouton.classList.remove('active');
-        bouton.classList.add('inactive');
-      });
+      if (zone_formulaire_ajout_timeline.classList.contains("active-form")) {
+        zone_formulaire_ajout_timeline.classList.remove('active-form');
+        zone_formulaire_ajout_timeline.classList.add('inactive-form');
+        zones_boutons_supprimant_timeline.forEach(bouton => {
+          bouton.classList.remove('active');
+          bouton.classList.add('inactive');
+        });
+      } else {
+        zone_formulaire_ajout_timeline.classList.remove('inactive-form');
+        zone_formulaire_ajout_timeline.classList.add('active-form');
+        zones_boutons_supprimant_timeline.forEach(bouton => {
+          bouton.classList.remove('inactive');
+          bouton.classList.add('active');
+        });
+      }
+
     }
-    else {
-      zone_formulaire_ajout_timeline.className = "active";
-      zones_boutons_supprimant_timeline.forEach(bouton => {
-        bouton.classList.remove('inactive');
-        bouton.classList.add('active');
-      });
-    }
-
   }
-}
 
 </script>
+
 </html>

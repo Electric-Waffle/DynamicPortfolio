@@ -67,25 +67,25 @@ class InteractionFichier
         $chemin_dest = "";
         // Vérifier si le fichier existe
         if (!file_exists($unCheminFichierTemporaire)) {
-            $messageErreur .= "Le fichier ne peut pas etre transformé car il n'existe pas.\n";
+            $messageErreur .= "ERREUR : Le fichier ne peut pas etre transformé car il n'existe pas.\n";
         }
         // Vérifier l'extension du fichier
         $extensionsAutorisees = ['jpg', 'jpeg', 'png'];
         $ext = strtolower(pathinfo($unNomDeFichierAvecExtention, PATHINFO_EXTENSION));
         if (!in_array($ext, $extensionsAutorisees)) {
-            $messageErreur .= "Extension de fichier non autorisée. Extensions permises : " . implode(', ', $extensionsAutorisees) . ".\n";
+            $messageErreur .= "ERREUR : Extension de fichier non autorisée. Extensions permises : " . implode(', ', $extensionsAutorisees) . ".\n";
         }
         // Vérifier le type MIME pour plus de sécurité
         $typesMimeAutorises = ['image/jpeg', 'image/png'];
         $info = new  \finfo(FILEINFO_MIME_TYPE);
         $typeMime = $info->file($unCheminFichierTemporaire);
         if (!in_array($typeMime, $typesMimeAutorises)) {
-            $messageErreur .= "Type MIME du fichier non autorisé.\n";
+            $messageErreur .= "ERREUR : Type MIME du fichier non autorisé.\n";
         }
         // Vérifier la taille du fichier (exemple max 5MB)
         $tailleMax = 10 * 1024 * 1024; // 10 Mo en octets
         if (filesize($unCheminFichierTemporaire) > $tailleMax) {
-            $messageErreur .= "Le fichier est trop volumineux. Taille maximale autorisée: 10 Mo.\n";
+            $messageErreur .= "ERREUR : Le fichier est trop volumineux. Taille maximale autorisée: 10 Mo.\n";
         }
 
         // Si pas d'erreurs
@@ -104,7 +104,7 @@ class InteractionFichier
             // Déplacement de l'image jusqu'à son répertoire final
             if (!move_uploaded_file($unCheminFichierTemporaire, $chemin_dest)) {
                 // Échec du déplacement
-                $messageErreur = "Échec du déplacement";
+                $messageErreur = "ERREUR : Échec du déplacement";
                 $chemin_dest = "";
             }
         }

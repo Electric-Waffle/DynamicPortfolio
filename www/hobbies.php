@@ -2,11 +2,19 @@
 session_start();
 
 require("gestion_bdd.php");
+require("../core/View.php");
 
 use Model\BDD;
+use Core\View;
+
+// Controlleur
 
 $mode = "User";
 $message_erreur = "";
+// si image trop grande, erreur
+if (isset($_FILES['image']) && $_FILES['image']['error'] == 1) {
+  $message_erreur = "ERREUR : Image trop volumineuse.";
+}
 // si informations de titre et de description et d'image, on les récupère et on rajoute
 if (isset($_POST["titre"]) && isset($_POST["description"]) && isset($_FILES['image']) && $_FILES['image']['error'] == UPLOAD_ERR_OK) {
   $titre = $_POST["titre"];
@@ -36,6 +44,15 @@ if (isset($_SESSION['nom']) && $_SESSION['nom'] == "Sylvain") {
 // récupération des données de hobby dans la bdd
 $gestionnaireHobby = BDD::recupHobbiesDansBdd();
 
+// récupération des différents "bouts de page"
+$barre_navigation = View::render("barre_bouton.php", ["mode" => $mode, "message_erreur" => $message_erreur]);
+$barre_droite = View::render("barre_droite.php");
+$barre_gauche = View::render("barre_gauche.php");
+$barre_haut = View::render("barre_haut.php", ["mode" => $mode, "type" => "with_button"]);
+$formulaire_ajout = View::render("form_ajout_hobbie.php", ["mode" => $mode]);
+
+// Vue
+
 ?>
 
 
@@ -46,100 +63,26 @@ $gestionnaireHobby = BDD::recupHobbiesDansBdd();
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Hobbies</title>
-  <style>
-    .active {
-      display: contents;
-    }
-
-    .inactive {
-      display: none;
-    }
-  </style>
   <link rel="stylesheet" href="style.css" />
 </head>
 
 <body>
 
   <!-- Barre supérieure -->
-  <?php
-  if ($mode == "Backoffice") {
-  ?>
-  <?php
-  }
-  ?>
-  <header class="bar top-bar">
-
-    <!-- Joli bouton css-->
-    <?php
-    if ($mode == "Backoffice") {
-    ?>
-      <div class="switch-container">
-        <input class="switch-input" type="checkbox">
-        <div class="switch-button">
-          <div class="switch-button-inside">
-            <svg class="switch-icon off" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
-              <path fill-rule="evenodd" clip-rule="evenodd" d="M8 12C10.2091 12 12 10.2091 12 8C12 5.79086 10.2091 4 8 4C5.79086 4 4 5.79086 4 8C4 10.2091 5.79086 12 8 12ZM8 14C11.3137 14 14 11.3137 14 8C14 4.68629 11.3137 2 8 2C4.68629 2 2 4.68629 2 8C2 11.3137 4.68629 14 8 14Z" />
-            </svg>
-            <svg class="switch-icon on" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
-              <rect x="2" y="7" width="12" height="2" rx="1" />
-            </svg>
-          </div>
-        </div>
-      </div>
-    <?php
-    }
-    ?>
-
-  </header>
+  <?php echo $barre_haut; ?>
 
   <!-- Conteneur principal -->
   <div class="layout">
     <!-- Barre gauche -->
-    <aside class="bar side-bar left-bar"></aside>
+    <?php echo $barre_gauche; ?>
 
     <!-- Contenu principal scrollable -->
     <main class="content">
 
       <!-- formulaire d'ajout -->
-      <?php
-      if ($mode == "Backoffice") {
-      ?>
-        <div id="formulaire_ajout_hobby" class="inactive">
-
-          <div>
-            <h3>Ajouter un Hobbie</h3>
-          </div>
-
-          <form action="" method="post" enctype="multipart/form-data">
-            <div>
-              <label for="titre" style="margin-right: 10px;">Titre :</label>
-              <input type="text" id="titre" name="titre">
-              <label for="description" style="margin-left: 10px; margin-right: 10px;">Description :</label>
-              <input type="text" id="description" name="description" style="margin-right: 10px;">
-              <label for="image" style="margin-left: 10px; margin-right: 10px;">Image :</label>
-              <input type="file" name="image" id="image" style="margin-right: 10px;" accept=".jpg, .jpeg, .png">
-              <input type="submit" value="Valider">
-            </div>
-          </form>
-
-        </div>
-
-
-      <?php
-      }
-      ?>
+      <?php echo $formulaire_ajout; ?>
 
       <div style="height: auto; background: #f9f9f9;">
-
-
-
-        <br>
-
-        <?php
-        if ($message_erreur != "") {
-          echo "<h3>" . $message_erreur . "</h3>";
-        }
-        ?>
 
         <br>
 
@@ -152,55 +95,42 @@ $gestionnaireHobby = BDD::recupHobbiesDansBdd();
 
 
         <div class="affichage_hobbies">
-          <?php
-          foreach ($gestionnaireHobby->recupererHobbies() as $hobby) {
-            $affichage_hobby = "<div class=\"boite_about_intro\">";
-            $affichage_hobby .= $hobby->titre . " <br> " . $hobby->description . " <br> " . "<img src=\"" . $hobby->chemin_image . "\" alt=\"\" >";
-            if ($mode == "Backoffice") {
-              $affichage_hobby .= "<form action=\"\" method=\"post\" class=\"inactive bouton_suppression_hobby\"><input type=\"hidden\" name=\"id_pour_suppression\" value=\"" . $hobby->id . "\"><input type=\"submit\" value=\"supprimer\"></form>";
-            }
-            $affichage_hobby .= "</div>";
-            echo $affichage_hobby;
-          }
-          ?>
+            <?php foreach ($gestionnaireHobby->recupererHobbies() as $hobby): ?>
+
+                <div class="boite_about_intro">
+
+                    <strong><?= htmlspecialchars($hobby->titre) ?></strong><br>
+                    <?= nl2br(htmlspecialchars($hobby->description)) ?><br>
+                    <img src="<?= htmlspecialchars($hobby->chemin_image) ?>" alt="" style="max-width:100%; height:auto;">
+
+                    <?php if ($mode === "Backoffice"): ?>
+                        <form action="" method="post" class="bouton_suppression_hobby inactive">
+                            <input type="hidden" name="id_pour_suppression" value="<?= $hobby->id ?>">
+                            <input type="submit" value="Supprimer" class="delete-button">
+                        </form>
+                    <?php endif; ?>
+
+                </div>
+
+            <?php endforeach; ?>
         </div>
+
 
       </div>
 
 
 
 
-  </main>
+    </main>
+    
     <!-- Barre droite -->
-  <aside class="bar side-bar right-bar"></aside>
+    <?php echo $barre_droite; ?>
+
   </div>
 
   <!-- Barre inférieure avec les contrôles -->
-  <footer class="bar bottom-bar">
-    <!-- Croix directionnelle -->
-    <div class="dpad">
-      <a href="index.html" class="btn up">home</a>
-      <a href="about.php" class="btn down">about</a>
-      <a href="hobbies.php" class="btn left"></a>
-      <a href="#" class="btn right"></a>
-      <a href="#" class="btn center"></a>
-    </div>
+  <?php echo $barre_navigation; ?>
 
-    <!-- Boutons A & B -->
-    <div class="buttons">
-      <?php
-      if ($mode == "Backoffice") {
-        echo "<form method=\"post\" action=\"\">";
-        echo "<input class=\"btn button-b\" type=\"submit\" name=\"deconnexion\" value=\"B\">";
-        echo "</form>";
-      } else {
-        echo "<form method=\"post\" action=\"\">";
-        echo "<input class=\"btn button-a\" type=\"submit\" name=\"connexion\" value=\"A\">";
-        echo "</form>";
-      }
-      ?>
-    </div>
-  </footer>
 
 </body>
 
@@ -215,14 +145,16 @@ $gestionnaireHobby = BDD::recupHobbiesDansBdd();
 
     document.querySelector('.switch-input').onclick = () => {
 
-      if (zone_formulaire_ajout_hobby.className == "active") {
-        zone_formulaire_ajout_hobby.className = "inactive";
+      if (zone_formulaire_ajout_hobby.classList.contains("active-form")) {
+        zone_formulaire_ajout_hobby.classList.remove('active-form');
+        zone_formulaire_ajout_hobby.classList.add('inactive-form');
         zones_boutons_supprimant_hobby.forEach(bouton => {
           bouton.classList.remove('active');
           bouton.classList.add('inactive');
         });
       } else {
-        zone_formulaire_ajout_hobby.className = "active";
+        zone_formulaire_ajout_hobby.classList.remove('inactive-form');
+        zone_formulaire_ajout_hobby.classList.add('active-form');
         zones_boutons_supprimant_hobby.forEach(bouton => {
           bouton.classList.remove('inactive');
           bouton.classList.add('active');

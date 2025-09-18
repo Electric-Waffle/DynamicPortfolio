@@ -8,11 +8,13 @@ class LienContact
     public $id;
     public $chemin_image;
     public $description;
-    public function __construct($id, $chemin_image, $description)
+    public $nom;
+    public function __construct($id, $chemin_image, $description, $nom)
     {
         $this->id = $id;
         $this->chemin_image = $chemin_image;
         $this->description = $description;
+        $this->nom = $nom;
     }
 }
 
@@ -30,9 +32,15 @@ class GestionnaireContacts
         foreach ($this->contacts as $contact) {
             echo "Id : " . $contact->id . "<br>";
             echo "Chemin Image : " . $contact->chemin_image . "<br>";
-            echo "Description : " . $contact->description . "<br>";
+            echo "Lien : " . $contact->description . "<br>";
+            echo "Nom : " . $contact->nom . "<br>";
             echo "<hr>";
         }
+    }
+
+    public function recupererContacts()
+    {
+        return $this->contacts;
     }
 
 }

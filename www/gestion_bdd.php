@@ -30,7 +30,7 @@ class BDD {
             $cheminImageASupprimer = $res[$nomCheminDansBdd];
 
         } else {
-            $messageErreur .= "Pas d'images associées a cet id.\n";
+            $messageErreur .= "ERREUR : Pas d'images associées a cet id.\n";
         }
 
         // ETAPE 2 : SUPPRESSION DE L'IMAGE
@@ -61,7 +61,7 @@ class BDD {
 
         while ($row = $resultat->fetchArray(SQLITE3_ASSOC)) {
 
-            $unContact = new LienContact($row['id_contact'], $row['chemin_logo'], $row['lien']);
+            $unContact = new LienContact($row['id_contact'], $row['chemin_logo'], $row['lien'], $row['nom']);
 
             $gestionnaire->ajouterContact($unContact);
 
@@ -73,7 +73,7 @@ class BDD {
         return $gestionnaire;
     }
 
-    static public function ajoutContactDansBdd($chemin_logo_temp, $nom_logo_temp, $description){
+    static public function ajoutContactDansBdd($chemin_logo_temp, $nom_logo_temp, $description, $nom){
         // chemin d'image obtenu en général avec $_FILES['image']['tmp_name'] et ca $_FILES['image']['name']
         // AJout d'un contact dans la base de donnée
             
@@ -92,22 +92,23 @@ class BDD {
         $connexionBaseDeDonnee = new SQLite3(BDD::$cheminDeLaBDD);
 
         // Préparation du requetage
-        $requetage = $connexionBaseDeDonnee->prepare("insert into contact_link (chemin_logo, lien) values (?, ?)");
+        $requetage = $connexionBaseDeDonnee->prepare("insert into contact_link (chemin_logo, lien, nom) values (?, ?, ?)");
             
         // Liage des variables a la requete
         $requetage->bindValue(1, $cheminFinalNouvelleImage, SQLITE3_TEXT);
         $requetage->bindValue(2, $description, SQLITE3_TEXT);
+        $requetage->bindValue(3, $nom, SQLITE3_TEXT);
             
         // Execution de la requete
         if ($requetage->execute()) {
                 
             // Message en cas de succès de l'édition
-            $message_erreur .= "<h1>Contact Ajouté Avec Succès</h1>";
+            $message_erreur .= "Contact Ajouté Avec Succès";
                 
         } else {
                 
             // Message en cas d'échec de l'édition
-            $message_erreur .= "<h1>Erreur lors de l'Ajout du Contact</h1>";
+            $message_erreur .= "ERREUR : Lors de l'Ajout du Contact";
                 
         }
             
@@ -136,12 +137,12 @@ class BDD {
         if ($requetage->execute()) {
                 
             // Message en cas de succès de l'édition
-            $message_erreur .= "<h1>Contact Supprimé Avec Succès</h1>";
+            $message_erreur .= "Contact Supprimé Avec Succès";
                 
         } else {
                 
             // Message en cas d'échec de l'édition
-            $message_erreur .= "<h1>Erreur lors de la Suppression du Contact</h1>";
+            $message_erreur .= "ERREUR : Lors de la Suppression du Contact";
                 
         }
             
@@ -209,12 +210,12 @@ class BDD {
         if ($requetage->execute()) {
                 
             // Message en cas de succès de l'édition
-            $message_erreur .= "<h1>Skill Ajouté Avec Succès</h1>";
+            $message_erreur .= "Skill Ajouté Avec Succès";
                 
         } else {
                 
             // Message en cas d'échec de l'édition
-            $message_erreur .= "<h1>Erreur lors de l'Ajout du Skill</h1>";
+            $message_erreur .= "ERREUR : Lors de l'Ajout du Skill";
                 
         }
             
@@ -243,12 +244,12 @@ class BDD {
         if ($requetage->execute()) {
                 
             // Message en cas de succès de l'édition
-            $message_erreur .= "<h1>Skill Supprimé Avec Succès</h1>";
+            $message_erreur .= "Skill Supprimé Avec Succès";
                 
         } else {
                 
             // Message en cas d'échec de l'édition
-            $message_erreur .= "<h1>Erreur lors de la Suppression du Skill</h1>";
+            $message_erreur .= "ERREUR : Lors de la Suppression du Skill";
                 
         }
             
@@ -315,12 +316,12 @@ class BDD {
         if ($requetage->execute()) {
                 
             // Message en cas de succès de l'édition
-            $message_erreur .= "<h1>Hobby Ajouté Avec Succès</h1>";
+            $message_erreur .= "Hobby Ajouté Avec Succès";
                 
         } else {
                 
             // Message en cas d'échec de l'édition
-            $message_erreur .= "<h1>Erreur lors de l'Ajout du Hobby</h1>";
+            $message_erreur .= "ERREUR : Lors de l'Ajout du Hobby";
                 
         }
             
@@ -349,12 +350,12 @@ class BDD {
         if ($requetage->execute()) {
                 
             // Message en cas de succès de l'édition
-            $message_erreur .= "<h1>Hobby Supprimé Avec Succès</h1>";
+            $message_erreur .= "Hobby Supprimé Avec Succès";
                 
         } else {
                 
             // Message en cas d'échec de l'édition
-            $message_erreur .= "<h1>Erreur lors de la Suppression du Hobby</h1>";
+            $message_erreur .= "ERREUR : Lors de la Suppression du Hobby";
                 
         }
             
@@ -410,12 +411,12 @@ class BDD {
         if ($requetage->execute()) {
                 
             // Message en cas de succès de l'édition
-            $message_erreur .= "<h1>Timeline Ajouté Avec Succès</h1>";
+            $message_erreur .= "Timeline Ajoutée Avec Succès";
                 
         } else {
                 
             // Message en cas d'échec de l'édition
-            $message_erreur .= "<h1>Erreur lors de l'Ajout de la Timeline</h1>";
+            $message_erreur .= "ERREUR : Lors de l'Ajout de la Timeline";
                 
         }
             
@@ -442,12 +443,12 @@ class BDD {
         if ($requetage->execute()) {
                 
             // Message en cas de succès de l'édition
-            $message_erreur .= "<h1>Timeline Supprimée Avec Succès</h1>";
+            $message_erreur .= "Timeline Supprimée Avec Succès";
                 
         } else {
                 
             // Message en cas d'échec de l'édition
-            $message_erreur .= "<h1>Erreur lors de la Suppression de la Timeline</h1>";
+            $message_erreur .= "ERREUR : lors de la Suppression de la Timeline";
                 
         }
             
@@ -503,12 +504,12 @@ class BDD {
         if ($requetage->execute()) {
                 
             // Message en cas de succès de l'édition
-            $message_erreur .= "<h1>Tag Ajouté Avec Succès</h1>";
+            $message_erreur .= "Tag Ajouté Avec Succès";
                 
         } else {
                 
             // Message en cas d'échec de l'édition
-            $message_erreur .= "<h1>Erreur lors de l'Ajout du Tag</h1>";
+            $message_erreur .= "ERREUR : Lors de l'Ajout du Tag";
                 
         }
             
@@ -535,12 +536,12 @@ class BDD {
         if ($requetage->execute()) {
                 
             // Message en cas de succès de l'édition
-            $message_erreur .= "<h1>Tag Supprimé Avec Succès</h1>";
+            $message_erreur .= "Tag Supprimé Avec Succès";
                 
         } else {
                 
             // Message en cas d'échec de l'édition
-            $message_erreur .= "<h1>Erreur lors de la Suppression du Tag</h1>";
+            $message_erreur .= "ERREUR : Lors de la Suppression du Tag";
                 
         }
             
@@ -659,7 +660,7 @@ class BDD {
         if ($requetage->execute() == false) {
                 
             // Message en cas d'échec de l'édition
-            $message_erreur .= "<h1>Erreur lors de l'Ajout du Projet</h1>";
+            $message_erreur .= "ERREUR : Lors de l'Ajout du Projet";
                 
         }
 
@@ -684,7 +685,7 @@ class BDD {
             if ($requetage->execute() == false) {
                     
                 // Message en cas d'échec de l'édition
-                $message_erreur .= "<h1>Erreur lors de l'Ajout du tag d'id " . $id_tag_associe_au_projet . " au projet</h1>";
+                $message_erreur .= "ERREUR : Lors de l'Ajout du tag d'id " . $id_tag_associe_au_projet . " au projet.";
                     
             }
         }
@@ -716,7 +717,7 @@ class BDD {
         if ($requetage->execute() == false) {
                 
             // Message en cas d'échec de l'édition
-            $message_erreur .= "<h1>Erreur lors de la supression des relations Tag/Projet</h1>";
+            $message_erreur .= "ERREUR : Lors de la supression des relations Tag/Projet";
                 
         }
 
@@ -736,7 +737,7 @@ class BDD {
         if ($requetage->execute() == false) {
                 
             // Message en cas d'échec de l'édition
-            $message_erreur .= "<h1>Erreur lors de la supression du Projet</h1>";
+            $message_erreur .= "ERREUR : Lors de la supression du Projet";
                 
         }
 
