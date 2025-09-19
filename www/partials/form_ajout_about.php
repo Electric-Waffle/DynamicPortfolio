@@ -10,9 +10,9 @@ if ($mode == "Backoffice") {
         <form action="" method="post">
             <div>
                 <label for="date" style="margin-right: 10px;">Date :</label>
-                <input type="text" id="date" name="date">
+                <input required type="text" id="date" name="date">
                 <label for="description" style="margin-left: 10px; margin-right: 10px;">Evenement :</label>
-                <input type="text" id="description" name="description" style="margin-right: 10px;">
+                <input required type="text" id="description" name="description" style="margin-right: 10px;">
                 <input type="submit" value="Valider">
             </div>
         </form>

@@ -9,12 +9,12 @@ if ($mode == "Backoffice") {
 
         <form action="" method="post" enctype="multipart/form-data">
             <div>
-                <label for="titre" style="margin-right: 10px;">Titre :</label>
-                <input type="text" id="titre" name="titre">
+                <label  for="titre" style="margin-right: 10px;">Titre :</label>
+                <input required type="text" id="titre" name="titre">
                 <label for="description" style="margin-left: 10px; margin-right: 10px;">Description :</label>
-                <input type="text" id="description" name="description" style="margin-right: 10px;">
+                <input required type="text" id="description" name="description" style="margin-right: 10px;">
                 <label for="image" style="margin-left: 10px; margin-right: 10px;">Image :</label>
-                <input type="file" name="image" id="image" style="margin-right: 10px;" accept=".jpg, .jpeg, .png">
+                <input required type="file" name="image" id="image" style="margin-right: 10px;" accept=".jpg, .jpeg, .png">
                 <input type="submit" value="Valider">
             </div>
         </form>

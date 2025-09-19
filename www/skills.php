@@ -15,19 +15,21 @@ $message_erreur = "";
 if (isset($_FILES['image']) && $_FILES['image']['error'] == 1) {
   $message_erreur = "ERREUR : Image trop volumineuse.";
 }
-// si informations de titre et de description et d'image, on les récupère et on rajoute
-if (isset($_POST["titre"]) && isset($_POST["description"]) && isset($_FILES['image']) && $_FILES['image']['error'] == UPLOAD_ERR_OK) {
+// si informations de logo, titre, extra, description, lien on les récupère et on rajoute
+if (isset($_POST["titre"]) && isset($_POST["extra"]) && isset($_POST["lien"]) && isset($_POST["description"]) && isset($_FILES['image']) && $_FILES['image']['error'] == UPLOAD_ERR_OK) {
   $titre = $_POST["titre"];
+  $extra = $_POST["extra"];
+  $lien = $_POST["lien"];
   $description = $_POST["description"];
   $chemin_image_temp = $_FILES['image']['tmp_name'];
   $nom_image_temp = $_FILES['image']['name'];
-  $message_erreur .= BDD::ajoutHobbyDansBdd($chemin_image_temp, $nom_image_temp, $titre, $description);
+  $message_erreur .= BDD::ajoutSkillDansBdd($chemin_image_temp, $nom_image_temp, $titre, $extra, $description, $lien);
 }
 
 // si informations d'id a supprimer, on supprime
 if (isset($_POST["id_pour_suppression"])) {
-  $id_pour_suppression_de_timeline = $_POST["id_pour_suppression"];
-  $message_erreur .= BDD::suppressionHobbyDansBdd($id_pour_suppression_de_timeline);
+  $id_pour_suppression_de_skill = $_POST["id_pour_suppression"];
+  $message_erreur .= BDD::suppressionSkillDansBdd($id_pour_suppression_de_skill);
 }
 
 // si information de session, on se met en mode backoffice
@@ -41,15 +43,15 @@ if (isset($_SESSION['nom']) && $_SESSION['nom'] == "Sylvain") {
   $mode = "Backoffice";
 }
 
-// récupération des données de hobby dans la bdd
-$gestionnaireHobby = BDD::recupHobbiesDansBdd();
+// récupération des données de skill dans la bdd
+$gestionnaireSkills = BDD::recupSkillsDansBdd();
 
 // récupération des différents "bouts de page"
 $barre_navigation = View::render("barre_bouton.php", ["mode" => $mode, "message_erreur" => $message_erreur]);
 $barre_droite = View::render("barre_droite.php");
 $barre_gauche = View::render("barre_gauche.php");
 $barre_haut = View::render("barre_haut.php", ["mode" => $mode, "type" => "with_button"]);
-$formulaire_ajout = View::render("form_ajout_hobbie.php", ["mode" => $mode]);
+$formulaire_ajout = View::render("form_ajout_skill.php", ["mode" => $mode]);
 
 // Vue
 
@@ -86,26 +88,27 @@ $formulaire_ajout = View::render("form_ajout_hobbie.php", ["mode" => $mode]);
 
         <br>
 
-        <h1>Hobbies :</h1>
-        <div class="boite_about_intro">
-          <h2>Description</h2>
-        </div>
+        <h1>Compétences</h1>
 
         <br>
 
 
-        <div class="affichage_hobbies">
-            <?php foreach ($gestionnaireHobby->recupererHobbies() as $hobby): ?>
+        <div class="affichage_skills">
+            <?php foreach ($gestionnaireSkills->recupererSkills() as $skill): ?>
 
                 <div class="boite_about_intro">
 
-                    <strong><?= htmlspecialchars($hobby->titre) ?></strong><br>
-                    <?= nl2br(htmlspecialchars($hobby->description)) ?><br>
-                    <img src="<?= htmlspecialchars($hobby->chemin_image) ?>" alt="" style="max-width:100%; height:auto;">
+                    <img src="<?= htmlspecialchars($skill->chemin_logo) ?>" alt="" style="max-width:100%; height:auto;">
+                    <strong><?= htmlspecialchars($skill->titre) ?></strong><br>
 
-                    <?php if ($mode === "Backoffice"): ?>
-                        <form action="" method="post" class="bouton_suppression_hobby inactive">
-                            <input type="hidden" name="id_pour_suppression" value="<?= $hobby->id ?>">
+                    <?php 
+                    if (!empty($skill->extra)) { ?>
+                      <?= nl2br(htmlspecialchars($skill->extra)) ?><br>
+                    <?php } 
+                    
+                    if ($mode === "Backoffice"): ?>
+                        <form action="" method="post" class="bouton_suppression_skill inactive">
+                            <input type="hidden" name="id_pour_suppression" value="<?= $skill->id ?>">
                             <input type="submit" value="Supprimer" class="delete-button">
                         </form>
                     <?php endif; ?>
@@ -139,44 +142,44 @@ $formulaire_ajout = View::render("form_ajout_hobbie.php", ["mode" => $mode]);
   let mode = <?= json_encode($mode) ?>;
 
   if (mode === "Backoffice") {
-    zone_formulaire_ajout_hobby = document.getElementById("formulaire_ajout_hobby");
-    zones_boutons_supprimant_hobby = document.querySelectorAll(".bouton_suppression_hobby");
+    zone_formulaire_ajout_skill = document.getElementById("formulaire_ajout_skill");
+    zones_boutons_supprimant_skill = document.querySelectorAll(".bouton_suppression_skill");
     zone_bouton_montrant_mode_backoffice = document.getElementById("bouton_montrant_mode_backoffice");
     zone_bouton_montrant_formulaire = document.getElementById("bouton_montrant_formulaire");
 
     document.querySelector('.switch-input').onclick = () => {
 
-      if (zone_formulaire_ajout_hobby.classList.contains("active-form")) {
-        zone_formulaire_ajout_hobby.classList.remove('active-form');
-        zone_formulaire_ajout_hobby.classList.add('inactive-form');
-        zones_boutons_supprimant_hobby.forEach(bouton => {
+      if (zone_formulaire_ajout_skill.classList.contains("active-form")) {
+        zone_formulaire_ajout_skill.classList.remove('active-form');
+        zone_formulaire_ajout_skill.classList.add('inactive-form');
+        zones_boutons_supprimant_skill.forEach(bouton => {
           bouton.classList.remove('active');
           bouton.classList.add('inactive');
         });
       } else {
-        zone_formulaire_ajout_hobby.classList.remove('inactive-form');
-        zone_formulaire_ajout_hobby.classList.add('active-form');
-        zones_boutons_supprimant_hobby.forEach(bouton => {
+        zone_formulaire_ajout_skill.classList.remove('inactive-form');
+        zone_formulaire_ajout_skill.classList.add('active-form');
+        zones_boutons_supprimant_skill.forEach(bouton => {
           bouton.classList.remove('inactive');
           bouton.classList.add('active');
         });
       }
 
-      if (zone_formulaire_ajout_hobby.classList.contains("form-is-visible")) {
-          zone_formulaire_ajout_hobby.classList.remove('form-is-visible');
-          zone_formulaire_ajout_hobby.classList.add('form-is-hidden');
+      if (zone_formulaire_ajout_skill.classList.contains("form-is-visible")) {
+          zone_formulaire_ajout_skill.classList.remove('form-is-visible');
+          zone_formulaire_ajout_skill.classList.add('form-is-hidden');
         }
 
     };
 
     zone_bouton_montrant_formulaire.onclick = () => {
 
-      if (zone_formulaire_ajout_hobby.classList.contains("form-is-visible")) {
-        zone_formulaire_ajout_hobby.classList.remove('form-is-visible');
-        zone_formulaire_ajout_hobby.classList.add('form-is-hidden');
+      if (zone_formulaire_ajout_skill.classList.contains("form-is-visible")) {
+        zone_formulaire_ajout_skill.classList.remove('form-is-visible');
+        zone_formulaire_ajout_skill.classList.add('form-is-hidden');
       } else {
-        zone_formulaire_ajout_hobby.classList.remove('form-is-hidden');
-        zone_formulaire_ajout_hobby.classList.add('form-is-visible');
+        zone_formulaire_ajout_skill.classList.remove('form-is-hidden');
+        zone_formulaire_ajout_skill.classList.add('form-is-visible');
       }
 
     };
