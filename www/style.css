@@ -53,8 +53,12 @@ body {
   display: contents;
 }
 
-.inactive {
+.inactive, .inactive-boite-information {
   display: none;
+}
+
+.active-boite-information {
+  display: flex;
 }
 
 .contact-list {
@@ -117,7 +121,7 @@ body {
   right: 0;
 }
 
-.affichage_hobbies {
+.affichage_hobbies, .affichage_skills {
   display: grid;
   grid-template-columns: repeat(4, 0.25fr);
   /* 4 colonnes égales */
@@ -224,8 +228,21 @@ body {
   text-decoration: none;
 }
 
-.boite_about_intro {
+.boite_about_intro, .boite_skill {
   border: black dotted 2px;
+}
+
+.boite_skill {
+  cursor: pointer;
+  transition: box-shadow 0.2s ease, transform 0.2s ease;
+}
+
+.boite_skill:hover {
+  box-shadow: 0 0 8px rgba(0, 0, 0, 0.2);
+  transform: translateY(-10px);
+  border: black solid 5px;
+  border-color: #999;
+  background-color: #f7f7f7;
 }
 
 .switch-container {
