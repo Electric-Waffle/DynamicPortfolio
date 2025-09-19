@@ -345,14 +345,23 @@ body {
 }
 
 .active-form {
-  pointer-events: auto; 
   opacity: 1;
 }
 
 .inactive-form {
-  pointer-events: none;   /* empêche l'interaction quand invisible */
   opacity: 0;
   top: -6vw;
+}
+
+.form-is-visible {
+  pointer-events: auto; 
+
+}
+
+.form-is-hidden {
+  pointer-events: none;   /* empêche l'interaction quand caché */
+  top: -75px;               /* distance du haut, ajuste selon ton design */
+
 }
 
   /* Toast / carré info */

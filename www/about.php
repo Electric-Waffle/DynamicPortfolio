@@ -132,6 +132,7 @@ $formulaire_ajout = View::render("form_ajout_about.php", ["mode" => $mode]);
     zone_formulaire_ajout_timeline = document.getElementById("formulaire_ajout_timeline");
     zones_boutons_supprimant_timeline = document.querySelectorAll(".bouton_suppression_timeline");
     zone_bouton_montrant_mode_backoffice = document.getElementById("bouton_montrant_mode_backoffice");
+    zone_bouton_montrant_formulaire = document.getElementById("bouton_montrant_formulaire");
 
     document.querySelector('.switch-input').onclick = () => {
 
@@ -151,7 +152,26 @@ $formulaire_ajout = View::render("form_ajout_about.php", ["mode" => $mode]);
         });
       }
 
-    }
+      if (zone_formulaire_ajout_timeline.classList.contains("form-is-visible")) {
+        zone_formulaire_ajout_timeline.classList.remove('form-is-visible');
+        zone_formulaire_ajout_timeline.classList.add('form-is-hidden');
+      }
+
+
+    };
+
+    zone_bouton_montrant_formulaire.onclick = () => {
+
+      if (zone_formulaire_ajout_timeline.classList.contains("form-is-visible")) {
+        zone_formulaire_ajout_timeline.classList.remove('form-is-visible');
+        zone_formulaire_ajout_timeline.classList.add('form-is-hidden');
+      } else {
+        zone_formulaire_ajout_timeline.classList.remove('form-is-hidden');
+        zone_formulaire_ajout_timeline.classList.add('form-is-visible');
+      }
+
+    };
+
   }
 
 </script>

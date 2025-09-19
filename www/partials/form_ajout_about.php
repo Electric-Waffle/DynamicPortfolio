@@ -1,7 +1,7 @@
 <?php
 if ($mode == "Backoffice") {
     ?>
-    <div id="formulaire_ajout_timeline" class="inactive-form form_for_adding">
+    <div id="formulaire_ajout_timeline" class="inactive-form form_for_adding form-is-hidden">
 
         <div>
             <h3>Ajouter une Timeline</h3>
@@ -16,6 +16,8 @@ if ($mode == "Backoffice") {
                 <input type="submit" value="Valider">
             </div>
         </form>
+
+        <button class="btn button-a" id="bouton_montrant_formulaire" style="pointer-events: auto;" type="button"></button>
 
     </div>
 

@@ -136,6 +136,7 @@ $formulaire_ajout = View::render("form_ajout_contact.php", ["mode" => $mode]);
     zone_formulaire_ajout_contact = document.getElementById("formulaire_ajout_contact");
     zones_boutons_supprimant_contact = document.querySelectorAll(".delete-form");
     zone_bouton_montrant_mode_backoffice = document.getElementById("bouton_montrant_mode_backoffice");
+    zone_bouton_montrant_formulaire = document.getElementById("bouton_montrant_formulaire");
 
     document.querySelector('.switch-input').onclick = () => {
 
@@ -155,7 +156,25 @@ $formulaire_ajout = View::render("form_ajout_contact.php", ["mode" => $mode]);
         });
       }
 
-    }
+          if (zone_formulaire_ajout_contact.classList.contains("form-is-visible")) {
+        zone_formulaire_ajout_contact.classList.remove('form-is-visible');
+        zone_formulaire_ajout_contact.classList.add('form-is-hidden');
+      }
+
+    };
+
+    zone_bouton_montrant_formulaire.onclick = () => {
+
+      if (zone_formulaire_ajout_contact.classList.contains("form-is-visible")) {
+        zone_formulaire_ajout_contact.classList.remove('form-is-visible');
+        zone_formulaire_ajout_contact.classList.add('form-is-hidden');
+      } else {
+        zone_formulaire_ajout_contact.classList.remove('form-is-hidden');
+        zone_formulaire_ajout_contact.classList.add('form-is-visible');
+      }
+
+    };
+
   }
 </script>
 
