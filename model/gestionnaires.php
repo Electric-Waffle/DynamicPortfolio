@@ -239,6 +239,10 @@ class Project
     public function ajouterTags($tag) {
         $this->tags[] = $tag;
     }
+
+    public function recupererTags() {
+        return $this->tags;
+    }
 }
 
 // Classe GestionnaireProjects
@@ -268,6 +272,24 @@ class GestionnaireProjects
             echo "Chemin Image : " . $project->chemin_image . "<br>";
             echo "<hr>";
         }
+    }
+
+    public function recupererProjects()
+    {
+        return $this->projects;
+    }
+
+    public function recupereTagDisponibleGraceAId($unId){
+
+        foreach ($this->tags_disponibles as $tag) {
+
+            if ($tag->id == $unId) {
+                return $tag;
+            }
+
+        }
+        
+        return false;
     }
 
 }

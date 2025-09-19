@@ -7,7 +7,7 @@
     <!-- Croix directionnelle -->
     <div class="dpad">
       <a href="index.php" class="btn up">home</a>
-      <a href="contact.php" class="btn down">contact</a>
+      <a href="contacts.php" class="btn down">contact</a>
       <a href="hobbies.php" class="btn left">hobbies</a>
       <a href="about.php" class="btn right">about</a>
     </div>

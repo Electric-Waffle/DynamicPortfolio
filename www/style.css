@@ -17,6 +17,16 @@ body {
   z-index: 100;
 }
 
+.kpis {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap
+}
+
+.kpis .badge {
+  background: #0b0f14
+}
+
 /* Barre du haut */
 .top-bar {
   position: sticky;
