@@ -1,8 +1,11 @@
 <?php
 
-namespace Model;
-require "gestionnaires.php";
+namespace Core;
+require "../model/gestionnaires.php";
 require "../model/InteractionFichier.php";
+
+use Model\InteractionFichier;
+use Model as M;
 use SQLite3;
 
 class BDD {
@@ -57,11 +60,11 @@ class BDD {
 
         $resultat = $connexionBaseDeDonnee->query($requete);
 
-        $gestionnaire = new GestionnaireContacts();
+        $gestionnaire = new M\GestionnaireContacts();
 
         while ($row = $resultat->fetchArray(SQLITE3_ASSOC)) {
 
-            $unContact = new LienContact($row['id_contact'], $row['chemin_logo'], $row['lien'], $row['nom']);
+            $unContact = new M\LienContact($row['id_contact'], $row['chemin_logo'], $row['lien'], $row['nom']);
 
             $gestionnaire->ajouterContact($unContact);
 
@@ -163,11 +166,11 @@ class BDD {
 
         $resultat = $connexionBaseDeDonnee->query($requete);
 
-        $gestionnaire = new GestionnaireSkills();
+        $gestionnaire = new M\GestionnaireSkills();
 
         while ($row = $resultat->fetchArray(SQLITE3_ASSOC)) {
 
-            $unSkill = new Skill($row['id_skill'], $row['chemin_logo'], $row['titre'], $row['extra'], $row['description']);
+            $unSkill = new M\Skill($row['id_skill'], $row['chemin_logo'], $row['titre'], $row['extra'], $row['description'], $row['lien']);
 
             $gestionnaire->ajouterSkill($unSkill);
 
@@ -179,7 +182,7 @@ class BDD {
         return $gestionnaire;
     }
 
-    static public function ajoutSkillDansBdd($chemin_logo_temp, $nom_logo_temp, $titre, $extra, $description){
+    static public function ajoutSkillDansBdd($chemin_logo_temp, $nom_logo_temp, $titre, $extra, $description, $lien){
         // chemin d'image obtenu en général avec $_FILES['image']['tmp_name'] et ca $_FILES['image']['name']
         // Ajout d'un skill dans la base de donnée
             
@@ -198,13 +201,14 @@ class BDD {
         $connexionBaseDeDonnee = new SQLite3(BDD::$cheminDeLaBDD);
 
         // Préparation du requetage
-        $requetage = $connexionBaseDeDonnee->prepare("insert into skill (chemin_logo, titre, extra, description) values (?, ?, ?, ?)");
+        $requetage = $connexionBaseDeDonnee->prepare("insert into skill (chemin_logo, titre, extra, description, lien) values (?, ?, ?, ?, ?)");
             
         // Liage des variables a la requete
         $requetage->bindValue(1, $cheminFinalNouvelleImage, SQLITE3_TEXT);
         $requetage->bindValue(2, $titre, SQLITE3_TEXT);
         $requetage->bindValue(3, $extra, SQLITE3_TEXT);
         $requetage->bindValue(4, $description, SQLITE3_TEXT);
+        $requetage->bindValue(5, $lien, SQLITE3_TEXT);
             
         // Execution de la requete
         if ($requetage->execute()) {
@@ -270,11 +274,11 @@ class BDD {
 
         $resultat = $connexionBaseDeDonnee->query($requete);
 
-        $gestionnaire = new GestionnaireHobbies();
+        $gestionnaire = new M\GestionnaireHobbies();
 
         while ($row = $resultat->fetchArray(SQLITE3_ASSOC)) {
 
-            $unHobby = new Hobby($row['id_hobby'], $row['titre'], $row['description'], $row['chemin_image']);
+            $unHobby = new M\Hobby($row['id_hobby'], $row['titre'], $row['description'], $row['chemin_image']);
 
             $gestionnaire->ajouterHobby($unHobby);
 
@@ -376,11 +380,11 @@ class BDD {
 
         $resultat = $connexionBaseDeDonnee->query($requete);
 
-        $gestionnaire = new GestionnaireTimelines();
+        $gestionnaire = new M\GestionnaireTimelines();
 
         while ($row = $resultat->fetchArray(SQLITE3_ASSOC)) {
 
-            $uneTimeline = new Timeline($row['id_timeline'], $row['date'], $row['description']);
+            $uneTimeline = new M\Timeline($row['id_timeline'], $row['date'], $row['description']);
 
             $gestionnaire->ajouterTimeline($uneTimeline);
 
@@ -469,11 +473,11 @@ class BDD {
 
         $resultat = $connexionBaseDeDonnee->query($requete);
 
-        $gestionnaire = new GestionnaireTags();
+        $gestionnaire = new M\GestionnaireTags();
 
         while ($row = $resultat->fetchArray(SQLITE3_ASSOC)) {
 
-            $unTagDisponible = new Tag($row['id_tag'], $row['titre'], $row['description']);
+            $unTagDisponible = new M\Tag($row['id_tag'], $row['titre'], $row['description']);
 
             $gestionnaire->ajouterTag($unTagDisponible);
 
@@ -586,7 +590,7 @@ class BDD {
     }
     static public function recupProjectsDansBdd(){
         // Récupération des projets dans la base de donnée
-        $gestionnaire = new GestionnaireProjects();
+        $gestionnaire = new M\GestionnaireProjects();
 
         // Récupération des relations projet/tag dans un tableau
         $tableau_relation_projet_tag = BDD::recupRelationsTagsProjectsDansBdd();
@@ -607,7 +611,7 @@ class BDD {
 
         while ($row = $resultat->fetchArray(SQLITE3_ASSOC)) {
 
-            $unProject = new Project($row['id_project'], $row['titre'], $row['description'], $row["lien"], $row["chemin_image"]);
+            $unProject = new M\Project($row['id_project'], $row['titre'], $row['description'], $row["lien"], $row["chemin_image"]);
 
             if (isset($tableau_relation_projet_tag[$unProject->id])) {
 

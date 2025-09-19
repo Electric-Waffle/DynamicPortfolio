@@ -4,7 +4,7 @@ session_start();
 require("../core/gestion_bdd.php");
 require("../core/View.php");
 
-use Model\BDD;
+use Core\BDD;
 use Core\View;
 
 

@@ -53,13 +53,15 @@ class Skill
     public $titre;
     public $extra;
     public $description;
-    public function __construct($id, $chemin_logo, $titre, $extra, $description)
+    public $lien;
+    public function __construct($id, $chemin_logo, $titre, $extra, $description, $lien)
     {
         $this->id = $id;
         $this->chemin_logo = $chemin_logo;
         $this->titre = $titre;
         $this->extra = $extra;
         $this->description = $description;
+        $this->lien = $lien;
     }
 }
 
@@ -80,8 +82,14 @@ class GestionnaireSkills
             echo "Titre : " . $skill->titre . "<br>";
             echo "Extra : " . $skill->extra . "<br>";
             echo "Description : " . $skill->description . "<br>";
+            echo "Lien : " . $skill->lien . "<br>";
             echo "<hr>";
         }
+    }
+
+    public function recupererSkills()
+    {
+        return $this->skills;
     }
 
 }
