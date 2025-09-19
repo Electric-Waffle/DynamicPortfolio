@@ -1,7 +1,7 @@
 <?php
 session_start();
 
-require("gestion_bdd.php");
+require("../core/gestion_bdd.php");
 require("../core/View.php");
 
 use Model\BDD;
