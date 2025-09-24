@@ -118,7 +118,7 @@ body {
   position: sticky;
   top: 40px;
   bottom: 100px;
-  width: 40px;
+  min-width: 40px;
 }
 
 .active {
@@ -298,6 +298,18 @@ body {
   line-height: 40px;
   border-radius: 50%;
   text-decoration: none;
+}
+
+.boite_tag {
+  cursor: pointer;
+  transition: box-shadow 0.2s ease, transform 0.2s ease;
+}
+
+.boite_tag:hover {
+  box-shadow: 0 0 8px rgba(0, 0, 0, 0.2);
+  transform: translateY(-2px);
+  border-color: #600;
+  background-color: #600;
 }
 
 .boite_about_intro, .boite_skill {

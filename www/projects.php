@@ -133,8 +133,10 @@ $formulaire_ajout = View::render("form_ajout_project.php", ["mode" => $mode, 'ta
                         $tag_quon_veut_afficher = $gestionnaireProject->recupereTagDisponibleGraceAId($id_tag);
                         ?>
 
-                        <span class="badge">
+                        <span class="badge boite_tag">
                           <?= $tag_quon_veut_afficher->titre ?>
+                          <p style="display: none;" class="description_popup"><?= $tag_quon_veut_afficher->description ?></p>
+                          <p style="display: none;" class="titre_popup"><?= $tag_quon_veut_afficher->titre ?></p>
                         </span>
 
                         <?php
@@ -221,6 +223,104 @@ $formulaire_ajout = View::render("form_ajout_project.php", ["mode" => $mode, 'ta
     };
 
   }
+
+  zone_qui_affiche_explication = document.querySelectorAll(".boite_tag");
+
+  // initialisation de la boite d'information
+  const overlay = document.createElement("div");
+  overlay.style.position = "fixed";
+  overlay.style.top = "0";
+  overlay.style.left = 0;
+  overlay.style.width = "100%";
+  overlay.style.height = "100%";
+  overlay.style.backgroundColor = "rgba(0, 0, 0, 0.5)";
+  overlay.style.zIndex = 0;
+  overlay.className = "inactive-boite-information";
+
+  barre_du_bas = document.querySelector('.bottom-bar').getBoundingClientRect();
+  barre_du_haut = document.querySelector('.top-bar').getBoundingClientRect();
+  position_boite_y = barre_du_haut.height + ((window.innerHeight - (barre_du_haut.height + barre_du_bas.height)) / 2);
+  position_boite_x = window.innerWidth / 2;
+
+  const boiteInformation = document.createElement("div");
+  boiteInformation.style.backgroundColor = "#ccc";
+  boiteInformation.style.padding = "20px";
+  boiteInformation.style.borderRadius = "8px";
+  boiteInformation.style.boxShadow = "0 0 15px rgba(0,0,0,0.3)";
+  boiteInformation.style.position = 'fixed';
+  boiteInformation.style.top = position_boite_y + 'px';
+  boiteInformation.style.left = position_boite_x + 'px';
+  boiteInformation.style.transform = 'translate(-50%, -50%)';
+
+  const boutonQuitterBoiteInformation = document.createElement("button");
+  boutonQuitterBoiteInformation.id = "bouton_quitte_explication";
+  boutonQuitterBoiteInformation.type = "button";
+  boutonQuitterBoiteInformation.classList = "btn button-a";
+
+  const zoneBoiteInformation = document.createElement("div");
+
+  boiteInformation.appendChild(boutonQuitterBoiteInformation);
+  boiteInformation.appendChild(zoneBoiteInformation);
+  overlay.appendChild(boiteInformation);
+  document.body.appendChild(overlay);
+
+  // description
+  // affiche la boite d'aide si on clique sur le bouton d'explication
+  zone_qui_affiche_explication.forEach(zone => {
+    zone.addEventListener("click", function(e) {
+      e.stopPropagation(); // Évite de fermer tout de suite
+      console.log("HALLo")
+
+      // récupere information
+      const description_du_tag = zone.querySelector(".description_popup").textContent;
+      const titre_du_tag = zone.querySelector(".titre_popup").textContent;
+
+      // cree la boite
+      const titre_boite_information = document.createElement("h1");
+      titre_boite_information.textContent = titre_du_tag;
+
+      const description_boite_information = document.createElement("h2");
+      description_boite_information.textContent = description_du_tag;
+
+
+      zoneBoiteInformation.innerHTML = ''; // vide l'interieur de la boite 
+      zoneBoiteInformation.appendChild(titre_boite_information);
+      zoneBoiteInformation.appendChild(description_boite_information);
+
+      // replace la boite
+      barre_du_bas = document.querySelector('.bottom-bar').getBoundingClientRect();
+      barre_du_haut = document.querySelector('.top-bar').getBoundingClientRect();
+      taille_screen_gameboy = (window.innerHeight - (barre_du_haut.height + barre_du_bas.height))
+      position_boite_y = barre_du_haut.height + (taille_screen_gameboy / 2);
+      position_boite_x = window.innerWidth / 2;
+      boiteInformation.style.top = position_boite_y + 'px';
+      boiteInformation.style.left = position_boite_x + 'px';
+      boiteInformation.style.transform = 'translate(-50%, -50%)';
+
+      // montre la boite
+      overlay.className = "active-boite-information";
+
+    });
+  });
+
+  // Empêcher le clic dans la boîte d'aide de fermer cette denriere
+  boiteInformation.addEventListener("click", function(e) {
+    e.stopPropagation();
+  });
+
+  // Empêcher le clic dans le texte de la boîte d'aide de fermer cette denriere
+  zoneBoiteInformation.addEventListener("click", function(e) {
+    e.stopPropagation();
+  });
+
+  // Ferme la boite d'aide si on clique en dehors (sur l'overlay quoi)
+  overlay.addEventListener("click", function() {
+    overlay.className = "inactive-boite-information";
+  });
+
+  boutonQuitterBoiteInformation.addEventListener("click", function() {
+    overlay.className = "inactive-boite-information";
+  });
 </script>
 
 </html>
