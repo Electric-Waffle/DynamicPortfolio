@@ -11,6 +11,37 @@ body {
   background-color: #eaeaea;
 }
 
+.accordion {
+  cursor: pointer;
+  padding: 10px;
+  display: flex;
+  align-items: center;
+  font-weight: bold;
+  border: 1px solid black;
+  margin-bottom: 5px;
+  background: #ccc;
+}
+
+.accordion .arrow {
+  transition: transform 0.3s ease;
+  margin-right: 8px;
+}
+
+.accordion.open .arrow {
+  transform: rotate(90deg); /* ► devient ▼ */
+}
+
+.panel {
+  display: none;
+  padding: 10px;
+  border: 2px solid black;
+  border-top: none;
+}
+
+.panel.show {
+  display: block;
+}
+
 /* Barres grises */
 .bar {
   background-color: #ccc;
@@ -20,11 +51,42 @@ body {
 .kpis {
   display: flex;
   gap: 10px;
-  flex-wrap: wrap
+  flex-wrap: wrap;
 }
 
-.kpis .badge {
-  background: #0b0f14
+.kpis-limited {
+  max-height: 150px;   /* hauteur max (ajuste selon ton design) */
+  overflow-y: auto;    /* active le scroll vertical */
+}
+
+.form-kpis {
+  background-color: white;
+  border: solid black 2px;
+}
+
+.kpis .badge, .kpis .badge-formulaire {
+  background: #900
+}
+
+.non-deletable-badge {
+  background-color: #ccc;
+  color: black;
+  display: inline-block;
+  padding: 4px 8px;
+  border-radius: 999px;
+  font-size: 0.8rem;
+  border: 1px solid black;
+  margin : 3px ;
+}
+
+.badge, .badge-formulaire {
+  display: inline-block;
+  padding: 4px 8px;
+  border-radius: 999px;
+  font-size: 0.8rem;
+  border: 1px solid #334155;
+  color: antiquewhite;
+  margin : 3px ;
 }
 
 /* Barre du haut */

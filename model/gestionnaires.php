@@ -279,6 +279,11 @@ class GestionnaireProjects
         return $this->projects;
     }
 
+    public function recupererTableauTagsDisponible()
+    {
+        return $this->tags_disponibles;
+    }
+
     public function recupereTagDisponibleGraceAId($unId){
 
         foreach ($this->tags_disponibles as $tag) {

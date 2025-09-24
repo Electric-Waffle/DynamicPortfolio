@@ -677,23 +677,30 @@ class BDD {
         $id_du_projet = $connexionBaseDeDonnee->lastInsertRowID();
 
         // ETAPE 3 : AJOUT DANS LA TABLE POSSEDE DES ID DE TAG AINSI QUE LEUR RELATION A L'ID DU PROJET
+        // Commencer une transaction (pour le faire en une fois et pas overload la bdd)
+        $connexionBaseDeDonnee->exec("BEGIN TRANSACTION");
+
+        // Préparer une seule requete
+        $requetage = $connexionBaseDeDonnee->prepare(
+            "INSERT INTO possede (id_project, id_tag) VALUES (?, ?)"
+        );
+
         foreach ($tableau_id_tag_du_projet as $id_tag_associe_au_projet) {
-            // Préparation du requetage pour la table projet
-            $requetage = $connexionBaseDeDonnee->prepare("insert into possede (id_project, id_tag) values (?, ?)");
-                
-            // Liage des variables a la requete
+            // Reset du statement pour réutiliser la même requête
+            $requetage->reset();
+
+            // Liage des variables
             $requetage->bindValue(1, $id_du_projet, SQLITE3_INTEGER);
             $requetage->bindValue(2, $id_tag_associe_au_projet, SQLITE3_INTEGER);
-                
-            // Execution de la requete
-            if ($requetage->execute() == false) {
-                    
-                // Message en cas d'échec de l'édition
-                $message_erreur .= "ERREUR : Lors de l'Ajout du tag d'id " . $id_tag_associe_au_projet . " au projet.";
-                    
+
+            // Execution
+            if ($requetage->execute() === false) {
+                $message_erreur .= "ERREUR : Ajout du tag $id_tag_associe_au_projet au projet $id_du_projet a échoué.<br>";
             }
         }
-        
+
+        // Commit la transaction (execute toute les requetes)
+        $connexionBaseDeDonnee->exec("COMMIT");
             
         // Fermeture de la base de donnée
         $connexionBaseDeDonnee->close();
