@@ -109,6 +109,26 @@ body {
   padding: 0 20px;
 }
 
+.bar-under-the-top-bar {
+  position: fixed;
+  top: 50px;
+  height: 20px;
+  width: 100%;
+  display: flex;
+  background-color: #868B9F;
+  z-index: 99;
+}
+
+.bar-above-the-bottom-bar {
+  position: fixed;
+  bottom: 13vw;
+  height: 20px;
+  width: 100%;
+  display: flex;
+  background-color: #868B9F;
+  z-index: 99;
+}
+
 /* Barres latérales */
 .layout {
   display: flex;
@@ -203,10 +223,11 @@ body {
 }
 
 .affichage_hobbies>div {
-  background-color: #eaeaea;
+  background-color: #87a915;
   padding: 40px;
   text-align: center;
   min-width: 0;
+  margin:10px ;
   /* Évite les débordements si le contenu est trop grand */
 }
 
@@ -221,8 +242,7 @@ body {
 .content {
   flex-grow: 1;
   padding: 20px;
-  background-color: white;
-  min-height: 100vh;
+  background-color: #868B9F;
 }
 
 /* Croix directionnelle */
@@ -312,8 +332,8 @@ body {
   background-color: #600;
 }
 
-.boite_about_intro, .boite_skill {
-  border: black dotted 2px;
+.boite_skill, .boite_about_intro {
+  border: black solid 2px;
 }
 
 .boite_skill {

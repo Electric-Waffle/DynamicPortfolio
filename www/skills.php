@@ -1,5 +1,5 @@
 <?php
-session_start();
+@session_start();
 
 require("../core/gestion_bdd.php");
 require("../core/View.php");
@@ -84,7 +84,7 @@ $formulaire_ajout = View::render("form_ajout_skill.php", ["mode" => $mode]);
       <!-- formulaire d'ajout -->
       <?php echo $formulaire_ajout; ?>
 
-      <div style="height: auto; background: #f9f9f9;">
+      <div class="div-inside-content" style="height: auto; background-color: #d2c45b">
 
         <br>
 

@@ -1,6 +1,8 @@
 <!-- Barre inférieure avec les contrôles -->
 
 
+<footer class="bar bar-above-the-bottom-bar">
+</footer>
 
 <footer class="bar bottom-bar">
 
@@ -44,3 +46,17 @@ if (!empty($message_erreur)):
 ?>
   <div id="toast" class="<?php echo $type_message ; ?>"><?= htmlspecialchars($message_erreur) ?></div>
 <?php endif; ?>
+<script>
+  function updateCenterHeight() {
+    const topBarHeight = 90;
+    const bottomBarHeight = window.innerWidth * 0.13;
+    const availableHeightDivInsideContentCenter = window.innerHeight - topBarHeight - bottomBarHeight;
+    const availableHeightContentCenter = availableHeightDivInsideContentCenter + 40 ;
+
+    document.querySelector('.div-inside-content').style.minHeight = `${availableHeightDivInsideContentCenter}px`;
+    document.querySelector('.content').style.minHeight = `${availableHeightContentCenter}px`;
+  }
+
+  window.addEventListener('resize', updateCenterHeight);
+  window.addEventListener('DOMContentLoaded', updateCenterHeight);
+</script>

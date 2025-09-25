@@ -1,6 +1,9 @@
 <!-- Barre supérieure -->
 <header class="bar top-bar">
 
+<footer class="bar bar-under-the-top-bar">
+</footer>
+
 <?php
 if ($mode == "Backoffice" && $type == "with_button") {
 ?>
