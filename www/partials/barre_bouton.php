@@ -14,7 +14,7 @@
       <a href="about.php" class="btn right">about</a>
     </div>
 
-    <!-- Boutons A & B -->
+    <!-- Boutons start -->
     <div class="buttons">
 
       <?php
@@ -30,8 +30,13 @@
       ?>
     </div>
 
-    <a href="skills.php" class="btn button-a">compétences</a>
-    <a href="projects.php" class="btn button-b">projets</a>
+    <div class="btns-ab">
+      <!-- Boutons a -->
+      <a href="skills.php" class="btn button-a">compétences</a>
+      <!-- Boutons b -->
+      <a href="projects.php" class="btn button-b">projets</a>
+    </div>
+
 
 </footer>
 
