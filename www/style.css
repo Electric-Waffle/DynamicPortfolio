@@ -268,7 +268,7 @@ body {
   position: relative;
   width: 40px;
   height: 40px;
-  margin-right: 110px;
+  margin-right: 10%;
   z-index: 0;
 }
 
@@ -280,11 +280,11 @@ body {
   background-color: transparent;
   border: 1px solid #333;
   transform: rotate(-45deg);
-  width: 120px;
-  height: 60px;
-  border-radius: 40px;
-  top: -10px;
-  left: -40px;
+  width: 260px;
+  height: 124px;
+  border-radius: 100px;
+  top: -43px;
+  left: -87px;
 }
 
 .button-a,
@@ -339,13 +339,13 @@ body {
   content: "";
   background-color: #868B9F;
   display: block;
-  height: 44px;
-  width: 42px;
+  height: 105px;
+  width: 104px;
   border-radius: 50%;
   position: absolute;
   z-index: -1;
-  bottom: 4px;
-  right: 9px;
+  bottom: -58px;
+  right: -52px;
 }
 
 .btns-ab {
@@ -356,13 +356,13 @@ body {
 }
 
 .btn-a {
-  top: 18px;
-  left: -20px;
+  top: 12px;
+  left: -54px;
 }
 
 .btn-b {
-  top: -28px;
-  left: -47px;
+  top: -85px;
+  left: -27px;
 }
 
 .button-select-top {
@@ -375,29 +375,36 @@ body {
   top: 5px;
   left: -27px;
 }
+.button-select-top:hover {
+  background-color: #4d4d4d;
+}
 
-.button-select-top form {
+.button-select-top form, .button-select-top a {
   height: 100%;
   width: 100%;
   top: 0px;
+  text-decoration: none;
 }
 
 .button-select-top:active {
   top: 7px;
 }
 
-.button-select-top form input {
+.button-select-top form input, .button-select-top a span {
   height: 100%;
   width: 100%;
   border: none;
   background: none;
+  display: block;
+  text-align: center;
+  cursor: pointer;
 }
 
 .button-top {
   display: block;
   position: absolute;
-  height: 40px;
-  width: 40px;
+  height: 100px;
+  width: 100px;
   border-radius: 50%;
 }
 
@@ -427,6 +434,7 @@ body {
   display: block;
   width: 200px;
   height: 200px;
+  margin-left: 1%;
 }
 
 .dpad-circle {
@@ -448,28 +456,40 @@ body {
   border-right: 25px solid transparent;
   border-bottom: 45px solid #4e4e4e; /* couleur du triangle */
 }
+.dpad-arrow:hover {
+  border-bottom: 45px solid #838282;
+}
 .dpad-arrow-up {
   top: 7px;
   left: 75.5px;
+}
+.dpad-arrow-up:active {
+  top: 9px;
 }
 .dpad-arrow-down {
   rotate: 180deg;
   top: 148px;
   left: 75.5px;
 }
-
+.dpad-arrow-down:active {
+  top: 150px;
+}
 .dpad-arrow-left {
   rotate: -90deg;
   top: 77.5px;
   left: 4.5px;
 }
-
+.dpad-arrow-left:active {
+  top: 79.5px;
+}
 .dpad-arrow-right {
   rotate: 90deg;
   top: 77.5px;
   left: 145.5px;
 }
-
+.dpad-arrow-right:active {
+  top: 81.5px;
+}
 .dpad-form-1, .dpad-form-2 {
   position: absolute;
   display: block;

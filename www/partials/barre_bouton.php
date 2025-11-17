@@ -21,33 +21,41 @@
     </div>
 
     <!-- Boutons start -->
-    <div class="buttons button-start-select">
+    <div style="display : flex; gap:141px">
 
-      <?php
-      if ($mode == "Backoffice") {
-      ?>
-
+      <div class="buttons button-start-select">
         <div class="button-select-top">
-          <form method="post" action="">
-            <input class="btn" type="submit" name="deconnexion" value="🛠️">
-          </form>
+          <a href="veille.php" class=""><span>📡</span></a>
         </div>
+      </div>
 
-      <?php 
-      }
-      else 
-      {
-      ?>
+      <div class="buttons button-start-select">
+        <?php
+        if ($mode == "Backoffice") {
+        ?>
 
-        <div class="button-select-top">
-          <form method="post">
-            <input class="btn" type="submit" name="connexion" value="🧰">
-          </form>
-        </div>
+          <div class="button-select-top">
+            <form method="post" action="">
+              <input class="btn" type="submit" name="deconnexion" value="🛠️">
+            </form>
+          </div>
 
-      <?php 
-      }
-      ?>
+        <?php 
+        }
+        else 
+        {
+        ?>
+
+          <div class="button-select-top">
+            <form method="post">
+              <input class="btn" type="submit" name="connexion" value="🧰">
+            </form>
+          </div>
+
+        <?php 
+        }
+        ?>
+      </div>
         
     </div>
 
