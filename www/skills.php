@@ -220,14 +220,8 @@ $formulaire_ajout = View::render("form_ajout_skill.php", ["mode" => $mode]);
   boiteInformation.style.left = position_boite_x + 'px';
   boiteInformation.style.transform = 'translate(-50%, -50%)';
 
-  const boutonQuitterBoiteInformation = document.createElement("button");
-  boutonQuitterBoiteInformation.id = "bouton_quitte_explication";
-  boutonQuitterBoiteInformation.type = "button";
-  boutonQuitterBoiteInformation.classList = "btn button-a";
-
   const zoneBoiteInformation = document.createElement("div");
 
-  boiteInformation.appendChild(boutonQuitterBoiteInformation);
   boiteInformation.appendChild(zoneBoiteInformation);
   overlay.appendChild(boiteInformation);
   document.body.appendChild(overlay);
@@ -295,9 +289,6 @@ $formulaire_ajout = View::render("form_ajout_skill.php", ["mode" => $mode]);
     overlay.className = "inactive-boite-information";
   });
 
-  boutonQuitterBoiteInformation.addEventListener("click", function() {
-    overlay.className = "inactive-boite-information";
-  });
 </script>
 
 </html>

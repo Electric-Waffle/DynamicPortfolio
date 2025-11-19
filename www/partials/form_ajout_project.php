@@ -99,7 +99,7 @@ if ($mode == "Backoffice") {
                 </div>
         </div>
 
-        <button class="btn button-a" id="bouton_montrant_formulaire" style="pointer-events: auto;" type="button"></button>
+        <button class="btn button-backoffice" id="bouton_montrant_formulaire" style="pointer-events: auto;" type="button"></button>
 
     </div>
 

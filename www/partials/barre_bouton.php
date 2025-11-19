@@ -63,7 +63,7 @@
       <!-- Boutons a -->
       <div class="btns-ab btn-a">
         <div class="button-top">
-          <a href="skills.php" class="btn button-a">📚</a>
+          <a href="skills.php" class="btn button-a"><span>📚</span></a>
         </div>
       </div>
       
@@ -71,7 +71,7 @@
       <!-- Boutons b -->
       <div class="btns-ab btn-b">
         <div class="button-top">
-          <a href="projects.php" class="btn button-b">🚧</a>
+          <a href="projects.php" class="btn button-b"><span>🚧</span></a>
         </div>
       </div>
     </div>
