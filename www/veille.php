@@ -97,9 +97,11 @@ $formulaire_ajout = View::render("form_ajout_article.php", ["mode" => $mode]);
                     <div class="article-blog-barre-gauche"></div>
 
                     <h1><strong><?= $article->title ?></strong></h1><br>
-                    <p><?= nl2br(htmlspecialchars($article->content)) ?></p><br>
-                    <a href="<?= ($article->link) ?>"><i>source</i></a><br>
-                    <i><?= ($article->createdAt) ?></i><br>
+                    <i>Le <?= ($article->createdAt) ?></i> - 
+                    <a href="<?= ($article->link) ?>"><i>source</i></a>
+
+                    <p><strong><?= nl2br(htmlspecialchars($article->content)) ?></strong></p><br>
+                    
                     <?php if ($mode === "Backoffice"): ?>
                         <form action="" method="post" class="bouton_suppression_article inactive">
                             <input type="hidden" name="id_pour_suppression" value="<?= $article->id ?>">
