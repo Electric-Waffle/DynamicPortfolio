@@ -753,7 +753,7 @@ main {
   position: absolute;
   display: block;
   width: 14vw;
-  height: 150vw;
+  height: 164vw;
   rotate: 45deg;
   background-color: #949d34;
   z-index: -1;
@@ -762,7 +762,7 @@ main {
 }
 
 .article-blog-barre-gauche {
-  left: 57.5vw;
+  left: 79.5vw;
 }
 
 .article-blog-barre-droite {
