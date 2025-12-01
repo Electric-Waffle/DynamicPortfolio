@@ -296,7 +296,53 @@ class GestionnaireProjects
         
         return false;
     }
+}
+
+    // Classe Timeline
+class Article
+{
+    public $id;
+    public $title;
+    public $content;
+    public $link;
+    public $createdAt;
+    public function __construct($id, $title, $content, $link, $createdAt)
+    {
+        $this->id = $id;
+        $this->title = $title;
+        $this->content = $content;
+        $this->link = $link;
+        $this->createdAt = $createdAt;
+    }
+}
+
+// Classe GestionnaireTimelines
+class GestionnaireArticles
+{
+    private $articles = [];
+
+    public function ajouterArticle($article) {
+        $this->articles[] = $article;
+    }
+
+    public function afficherArticles()
+    {
+        foreach ($this->articles as $article) {
+            echo "Id : " . $article->id . "<br>";
+            echo "Titre : " . $article->title . "<br>";
+            echo "Contenu : " . $article->content . "<br>";
+            echo "Lien : " . $article->link . "<br>";
+            echo "Date de Création : " . $article->createdAt . "<br>";
+            echo "<hr>";
+        }
+    }
+
+    public function recupererArticles()
+    {
+        return $this->articles;
+    }
 
 }
+
 
 ?>

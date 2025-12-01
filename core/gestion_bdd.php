@@ -757,6 +757,101 @@ class BDD {
 
         return $message_erreur;
     }
+
+    // Récup . Ajout . Suppression dans la table [article] de la bdd /data/database.db
+    static public function recupArticlesDansBdd(){
+        // Récupération des articles dans la base de donnée
+
+        // Connexion a la db
+        $connexionBaseDeDonnee = new SQLite3(BDD::$cheminDeLaBDD);
+            
+        $requete = "select * from article";
+
+        $resultat = $connexionBaseDeDonnee->query($requete);
+
+        $gestionnaire = new M\GestionnaireArticles();
+
+        while ($row = $resultat->fetchArray(SQLITE3_ASSOC)) {
+
+            $unArticle = new M\Article($row['id_article'], $row['title'], $row['content'], $row['link'], $row['createdAt']);
+
+            $gestionnaire->ajouterArticle($unArticle);
+
+        }
+
+        // Fermeture de la base de donnée
+        $connexionBaseDeDonnee->close();
+
+        return $gestionnaire;
+    }
+
+    static public function ajoutArticleDansBdd($titre, $contenu, $lien, $dateCreation){
+        // Ajout d'un article dans la base de donnée
+            
+        $message_erreur = "";
+
+        // Connexion a la db
+        $connexionBaseDeDonnee = new SQLite3(BDD::$cheminDeLaBDD);
+
+        // Préparation du requetage
+        $requetage = $connexionBaseDeDonnee->prepare("insert into article (title, content, link, createdAt) values (?, ?, ?, ?)");
+            
+        // Liage des variables a la requete
+        $requetage->bindValue(1, $titre, SQLITE3_TEXT);
+        $requetage->bindValue(2, $contenu, SQLITE3_TEXT);
+        $requetage->bindValue(3, $lien, SQLITE3_TEXT);
+        $requetage->bindValue(4, $dateCreation, SQLITE3_TEXT);
+            
+        // Execution de la requete
+        if ($requetage->execute()) {
+                
+            // Message en cas de succès de l'édition
+            $message_erreur .= "Article Ajouté Avec Succès";
+                
+        } else {
+                
+            // Message en cas d'échec de l'édition
+            $message_erreur .= "ERREUR : Lors de l'Ajout de l'Article";
+                
+        }
+            
+        // Fermeture de la base de donnée
+        $connexionBaseDeDonnee->close();
+
+        return $message_erreur;
+    }
+
+    static public function suppressionArticleDansBdd($unId){
+        // Suppression d'un hobby dans la base de donnée
+        $message_erreur = ""; 
+
+        // Connexion a la db
+        $connexionBaseDeDonnee = new SQLite3(BDD::$cheminDeLaBDD);
+
+        // Préparation du requetage
+        $requetage = $connexionBaseDeDonnee->prepare("delete from article where id_article = ?");
+            
+        // Liage des variables a la requete
+        $requetage->bindValue(1, $unId, SQLITE3_INTEGER);
+            
+        // Execution de la requete
+        if ($requetage->execute()) {
+                
+            // Message en cas de succès de l'édition
+            $message_erreur .= "Article Supprimé Avec Succès";
+                
+        } else {
+                
+            // Message en cas d'échec de l'édition
+            $message_erreur .= "ERREUR : Lors de la Suppression de l'Article";
+                
+        }
+            
+        // Fermeture de la base de donnée
+        $connexionBaseDeDonnee->close();
+
+        return $message_erreur;
+    }
     
 }
 ?>
