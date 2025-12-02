@@ -34,13 +34,3 @@ if ($mode == "Backoffice") {
 }
 ?>
 
-<script>
-// <!-- pour le menu déroulant -->
-document.querySelectorAll(".accordion").forEach(acc => {
-  acc.addEventListener("click", () => {
-    acc.classList.toggle("open");
-    const panel = acc.nextElementSibling;
-    panel.classList.toggle("show");
-  });
-});
-</script>

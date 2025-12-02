@@ -42,8 +42,14 @@ main {
   border-top: none;
 }
 
-.panel.show {
+.panel.show-begin {
   display: block;
+  opacity: 0;
+  transition: opacity 1.15s linear;
+}
+
+.panel.show-end {
+  opacity: 1;
 }
 
 /* Barres grises */
@@ -740,6 +746,7 @@ main {
   position: relative;
   z-index: 0;
   overflow: clip;
+  border-radius: 30px;
 }
 
 .article-blog p {
@@ -749,27 +756,18 @@ main {
   line-height: 1.6; /* espace confortable entre les lignes */
 }
 
-.article-blog-barre-gauche, .article-blog-barre-droite {
-  position: absolute;
-  display: block;
-  width: 14vw;
-  height: 164vw;
+.article-blog-barre {
+  position: absolute;        /* indispensable pour left / top */
+  background: #949d34;
   rotate: 45deg;
-  background-color: #949d34;
   z-index: -1;
-  top: -50vw;
-  overflow: clip;
+  width: 12vw;               /* largeur réaliste */
+  height: 200%;              /* 200% de la hauteur du bloc = toujours suffisant */
+  top: -50%;   
+  overflow: clip;              /* remonte la barre pour qu'elle coupe bien */
 }
 
-.article-blog-barre-gauche {
-  left: 79.5vw;
-}
-
-.article-blog-barre-droite {
-  left: 15.5vw;
-}
-
-.article-blog-barre-gauche::after, .article-blog-barre-droite::after {
+.article-blog-barre::after {
   content: "";
   position: absolute;
   top: 0;
@@ -784,24 +782,24 @@ main {
   );
 }
 
-.article-blog-barre-gauche::after {
-  animation: shine-left 50s infinite linear;
+.article-blog-barre::after {
+  animation: shine 50s infinite linear;
 }
 
-.article-blog-barre-droite::after {
-  animation: shine-right 75s infinite linear;
-}
-
-@keyframes shine-left {
+@keyframes shine {
   0%   { left: -200%; bottom:-200%; opacity: 0; }
   1.5%  { opacity: 1;}
   3% { left: 200%; bottom: 200%; opacity: 0; }
   100% { left: 200%; bottom: 200%; opacity: 0; }
 }
 
-@keyframes shine-right {
-  0%   { left: -200%; bottom:-200%; opacity: 0; }
-  0.5%  { opacity: 1;}
-  1% { left: 200%; bottom: 200%; opacity: 0; }
-  100% { left: 200%; bottom: 200%; opacity: 0; }
+.article-blog .accordion {
+  cursor: pointer;
+  padding: 10px;
+  display: flex;
+  align-items: center;
+  font-weight: bold;
+  border-bottom: 2px dotted black;
+  margin-bottom: 0;
+  background: #c7d250;
 }

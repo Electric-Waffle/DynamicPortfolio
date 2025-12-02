@@ -93,21 +93,27 @@ $formulaire_ajout = View::render("form_ajout_article.php", ["mode" => $mode]);
 
                 <div class="boite_about_intro article-blog">
 
-                    <div class="article-blog-barre-droite"></div>
-                    <div class="article-blog-barre-gauche"></div>
+                    <div class="accordion">
+                      <span class="arrow">►</span> 
+                      <span class="title"><h1><strong><?= $article->title ?></strong></h1><br></span>
+                    </div>
 
-                    <h1><strong><?= $article->title ?></strong></h1><br>
-                    <i>Le <?= ($article->createdAt) ?></i> - 
-                    <a href="<?= ($article->link) ?>"><i>source</i></a>
+                    <!-- <div class="article-blog-barre-droite"></div>
+                    <div class="article-blog-barre-gauche"></div> -->
+                    <div class="panel">
+                      
+                      <i>Le <?= ($article->createdAt) ?></i> - 
+                      <a href="<?= ($article->link) ?>"><i>source</i></a>
 
-                    <p><strong><?= nl2br(htmlspecialchars($article->content)) ?></strong></p><br>
-                    
-                    <?php if ($mode === "Backoffice"): ?>
-                        <form action="" method="post" class="bouton_suppression_article inactive">
-                            <input type="hidden" name="id_pour_suppression" value="<?= $article->id ?>">
-                            <input type="submit" value="Supprimer" class="delete-button">
-                        </form>
-                    <?php endif; ?>
+                      <p><strong><?= nl2br(htmlspecialchars($article->content)) ?></strong></p><br>
+                      
+                      <?php if ($mode === "Backoffice"): ?>
+                          <form action="" method="post" class="bouton_suppression_article inactive">
+                              <input type="hidden" name="id_pour_suppression" value="<?= $article->id ?>">
+                              <input type="submit" value="Supprimer" class="delete-button">
+                          </form>
+                      <?php endif; ?>
+                    </div>
 
                 </div>
 
@@ -181,6 +187,57 @@ $formulaire_ajout = View::render("form_ajout_article.php", ["mode" => $mode]);
   }
 
 
+document.addEventListener("DOMContentLoaded", () => {
+
+    document.querySelectorAll('.article-blog').forEach(container => {
+
+        const containerWidth = container.offsetWidth;
+
+        const barWidth = containerWidth * 0.12;
+        const spacing = containerWidth * 0.55;
+
+        let x = -barWidth;
+
+        while (x < containerWidth + barWidth) {
+
+            const bar = document.createElement("div");
+            bar.classList.add("article-blog-barre");
+
+            bar.style.width = barWidth + "px";
+            bar.style.left = x + "px";
+
+            container.appendChild(bar);
+
+            x += spacing;
+        }
+
+        // (Si tu veux vraiment cette barre supplémentaire)
+        const bar = document.createElement("div");
+        bar.classList.add("article-blog-barre");
+        bar.style.width = barWidth + "px";
+        bar.style.left = x + "px";
+        container.appendChild(bar);
+
+    });
+});
+
+
+// <!-- pour le menu déroulant -->
+document.querySelectorAll(".accordion").forEach(acc => {
+  acc.addEventListener("click", () => {
+    acc.classList.toggle("open");
+    const panel = acc.nextElementSibling;
+    panel.classList.toggle("show-begin");
+    requestAnimationFrame(() => {
+        requestAnimationFrame(() => {
+          panel.classList.toggle("show-end");
+
+        });
+    });
+  });
+});
 </script>
+
+
 
 </html>
